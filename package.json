@@ -24,11 +24,20 @@
     "openai": "^4.60.0"
   },
   "devDependencies": {
+    "puppeteer": "^24.42.0",
     "vitest": "^1.6.0"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "keywords": ["ai", "tokens", "claude", "cursor", "copilot", "pipeline", "cli"],
+  "keywords": [
+    "ai",
+    "tokens",
+    "claude",
+    "cursor",
+    "copilot",
+    "pipeline",
+    "cli"
+  ],
   "license": "MIT"
 }

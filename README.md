@@ -18,55 +18,61 @@
 
 ### 1. Comandos disponíveis
 
-![help](docs/screenshots/01-help.svg)
+![help](docs/screenshots/01-help.png)
 
 ---
 
 ### 2. Setup — detecta AI tools e injeta Caveman + MCP
 
-![setup](docs/screenshots/02-setup.svg)
+![setup](docs/screenshots/02-setup.png)
 
 ---
 
 ### 3. Pipeline builder interativo
 
-![run interactive](docs/screenshots/03-run-interactive.svg)
+![run interactive](docs/screenshots/03-run-interactive.png)
 
 ---
 
 ### 4. Resposta em streaming com compressão
 
-![streaming](docs/screenshots/04-streaming.svg)
+![streaming](docs/screenshots/04-streaming.png)
 
 ---
 
 ### 5. Modo não-interativo (scripts / CI)
 
-![non-interactive](docs/screenshots/05-non-interactive.svg)
+![non-interactive](docs/screenshots/05-non-interactive.png)
 
 ---
 
 ### 6. Skills com encadeamento de modos
 
-![skills chain](docs/screenshots/06-skills-chain.svg)
+![skills chain](docs/screenshots/06-skills-chain.png)
 
 ---
 
 ### 7. Templates — salvar e reusar pipelines
 
-![templates](docs/screenshots/07-templates.svg)
+![templates](docs/screenshots/07-templates.png)
 
 ---
 
 ### 8. Stats — métricas por projeto
 
-![stats](docs/screenshots/08-stats.svg)
+![stats](docs/screenshots/08-stats.png)
 
 ---
 
 ### 9. Ollama — modelo local sem API key
 
-![ollama](docs/screenshots/09-ollama.svg)
+![ollama](docs/screenshots/09-ollama.png)
+
+---
+
+### 10. Web Dashboard
+
+![dashboard](docs/screenshots/10-dashboard.png)
 
 ---
 
