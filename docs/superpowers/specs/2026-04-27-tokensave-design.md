@@ -124,17 +124,24 @@ $ npx tokensave run
 
 ### Entrada (Headroom)
 - Comprime código, logs, JSON, outputs de ferramentas antes de enviar para API
-- Implementado via `headroom-ai` Python subprocess
-- Estimativa de economia: 60–75% em contextos de código
+- Implementado via `headroom-ai` Python subprocess (requer Python 3.10+)
+- Se Python não estiver disponível: tokensave usa compressão própria leve (truncamento inteligente + remoção de comentários/whitespace) com economia estimada de 20–35%
+- Estimativa de economia com headroom: 60–75% em contextos de código
 
 ### Saída (Caveman)
 - Regras Caveman embutidas no system prompt de cada modo
 - Elimina filler, pleasantries, hedging, repetição
 - Estimativa de economia: 40–60% nas respostas
+- Funciona independente do Python — é injeção de texto no system prompt
 
 ### Estimativa pré-execução
 - Antes de chamar a API, o pipeline estima tokens e custo
 - Usuário confirma antes de executar
+
+### Proxy Sidecar vs Subprocess Headroom
+São dois componentes distintos:
+- **Subprocess Headroom**: comprime contexto dentro do executor antes de chamar a API
+- **Proxy Sidecar** (porta 7878): intercepta chamadas de tools externas (Claude Code, Cursor) para alimentar o dashboard com métricas reais de quem não usa o pipeline direto
 
 ---
 
@@ -153,8 +160,9 @@ O setup (`npx tokensave setup`) detecta e injeta configurações nativas:
 Detecção por heurísticas de filesystem:
 - `~/.claude/` → Claude Code
 - `~/.cursor/` → Cursor
-- `~/.config/gh/` ou extensão VS Code → Copilot
+- `~/.vscode/extensions/github.copilot*/` → Copilot (detecção via extensão VS Code instalada)
 - `~/.codeium/windsurf/` → Windsurf
+- Fallback: pergunta ao usuário qual tool usar se nenhum for detectado com confiança
 
 ---
 
@@ -277,7 +285,7 @@ tokensave/
 | Menu interativo | Inquirer.js | battle-tested, rico |
 | TUI | Ink (React no terminal) | componentes reutilizáveis |
 | Web dashboard | Hono + HTML vanilla | < 50KB, zero bundler |
-| AI calls | `@anthropic-ai/sdk` + `openai` | Claude e GPT/Gemini |
+| AI calls | `@anthropic-ai/sdk` + `openai` + `@google/generative-ai` | Claude, GPT, Gemini |
 | Compressão input | headroom-ai (Python subprocess) | já instalado |
 | Compressão output | Caveman rules embutidas | sem deps extras |
 | Storage | better-sqlite3 | zero config, local, rápido |
