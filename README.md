@@ -18,7 +18,7 @@
 
 ### O que é
 
-tokensave é uma CLI que estrutura como você interage com AI. Em vez de enviar prompts ad-hoc, você define **papel → tarefa → contexto → modo de raciocínio → condição de saída**, o sistema comprime o contexto automaticamente, chama a API e streama o resultado no terminal. Cada execução é salva no histórico com métricas de tokens e custo.
+tokensave é uma CLI que estrutura como você interage com AI. Em vez de enviar prompts ad-hoc, você define **papel → tarefa → contexto → modo de raciocínio → condição de saída**, o sistema comprime o contexto automaticamente, chama a API e streama o resultado no terminal. Cada execução é salva localmente com métricas de tokens e custo.
 
 **Economia típica: 60–75% nos tokens de entrada + 40–60% nos tokens de saída.**
 
@@ -52,46 +52,120 @@ npx tokensave stats
 
 ---
 
-### Como funciona
+### Como funciona — lógica completa
+
+O sistema é composto por cinco camadas independentes que se comunicam em sequência:
+
+#### 1. CLI (Commander)
+
+O ponto de entrada é `bin/tokensave.js`, que carrega `src/cli/index.js`. O [Commander](https://github.com/tj/commander.js) registra os subcomandos (`run`, `setup`, `dash`, `skills`, `stats`, `config`). Cada subcomando é um módulo separado em `src/cli/commands/` carregado de forma lazy com `await import()` — isso garante que o processo inicie instantaneamente sem carregar dependências desnecessárias.
+
+#### 2. Pipeline Builder (`src/pipeline/builder.js`)
+
+Quando o usuário executa `tokensave run`, o builder abre um formulário interativo via [Inquirer.js](https://github.com/SBoudrias/Inquirer.js). Os campos coletados são:
+
+- **PAPEL** — a persona que o AI assume (ex: "Security Auditor"). Define o tom e o ponto de vista da resposta.
+- **TAREFA** — o objetivo da sessão em linguagem natural.
+- **CONTEXTO** — código, arquivo ou texto colado. O builder lê arquivos do disco com `fs.readFileSync` quando o usuário informa um caminho.
+- **MODO** — um dos 11 modos de raciocínio. Cada modo é um objeto com `systemPrompt` otimizado, `cavemanLevel` e `papeis` sugeridos.
+- **CONDIÇÃO** — critério de conclusão (ex: "Todas as vulnerabilidades críticas identificadas").
+
+O builder retorna um objeto `pipeline` com esses cinco campos, que é passado integralmente para o executor.
+
+#### 3. Compressor (`src/compressor/`)
+
+Antes de chamar a API, o executor comprime o contexto em duas etapas:
+
+**Entrada — Headroom (`headroom.js`):**
+Tenta executar o binário `headroom` via `child_process.spawnSync`. O [headroom-ai](https://github.com/outlines-dev/headroom) é um compressor semântico de texto baseado em Python que remove redundâncias mantendo o significado técnico. Se o processo retornar status 0, o texto comprimido é usado. Se falhar (Python não instalado, headroom não encontrado, timeout de 15s), cai no fallback nativo.
+
+**Fallback nativo (`native.js`):**
+Compressor puro em JavaScript que:
+1. Remove comentários de linha (`//` em JS/TS, `#` em Python) com regex que evita matches dentro de strings
+2. Colapsa múltiplas linhas em branco para uma única
+3. Remove whitespace trailing por linha
+4. Aplica truncamento inteligente se o contexto ultrapassar `maxTokens`: mantém a primeira e última metade, inserindo um marcador `[truncated by tokensave]` no meio
+
+A estimativa de tokens usa a heurística `caracteres / 4`, que corresponde à média empírica do GPT-4 tokenizer para código e texto técnico.
+
+**Saída — Caveman (`caveman.js`):**
+Não comprime o contexto enviado — atua no system prompt. Injeta um bloco de regras de escrita no final de cada system prompt que instrui o modelo a responder de forma extremamente compacta. Três níveis:
+- `lite` — remove apenas filler words e pleasantries, mantém frases completas
+- `full` — fragmentos OK, remove artigos, hedging, sinônimos curtos
+- `ultra` — abreviações pesadas, setas para causalidade, mínimo de palavras possível
+
+#### 4. Executor (`src/pipeline/executor.js`)
+
+Com o contexto comprimido e o system prompt montado, o executor:
+
+1. **Detecta o provedor** pelo prefixo do modelo (`claude-*` → Anthropic, `gpt-*` / `o1-*` → OpenAI, `gemini-*` → Google)
+2. **Carrega a API key** do arquivo `~/.tokensave/config.json` ou das variáveis de ambiente (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_API_KEY`)
+3. **Monta o `userMessage`** concatenando PAPEL + TAREFA + CONTEXTO comprimido + CONDIÇÃO
+4. **Exibe o resumo pré-execução** com tokens originais, tokens após compressão, custo estimado e modelo
+5. **Faz streaming** — cada provedor tem seu próprio handler:
+   - Anthropic: usa `client.messages.stream()` do `@anthropic-ai/sdk`, itera sobre eventos `content_block_delta`
+   - OpenAI: usa `client.chat.completions.create({ stream: true })` do `openai`, itera sobre `choices[0].delta.content`
+   - Google: usa `genModel.generateContentStream()` do `@google/generative-ai`, itera sobre `chunk.text()`
+6. **Persiste métricas** no SQLite via `createStore()` — salva papel, tarefa, modo, modelo, tokens in/out, custo e duração
+
+#### 5. Store (`src/store/db.js`)
+
+Usa [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) para armazenar o histórico em `~/.tokensave/metrics.db`. O banco é criado automaticamente na primeira execução com `CREATE TABLE IF NOT EXISTS`. As queries usam prepared statements para performance. Métodos expostos: `saveRun`, `getRecentRuns`, `getSummary`, `getTodaySummary`, `getModeStats`.
+
+#### 6. Dashboard
+
+**Terminal (`src/dashboard/tui.js`):** Usa `process.stdin.setRawMode(true)` para capturar teclas sem Enter. Renderiza uma tabela ASCII com chalk. Teclas: `r` refresh, `h` histórico, `w` abre browser, `q` sai.
+
+**Web (`src/dashboard/web/`):** O [Hono](https://github.com/honojs/hono) serve três endpoints REST (`/api/summary`, `/api/runs`, `/api/runs/export.csv`) e o HTML estático. O `index.html` é 100% vanilla — `fetch` + DOM — sem bundler, sem framework. Atualiza automaticamente a cada 30 segundos.
+
+#### 7. Setup e Injeção (`src/detector/` + `src/injector/`)
+
+O detector usa `fs.existsSync` em caminhos conhecidos para identificar quais tools estão instalados. Cada injector lê o arquivo de configuração do tool, verifica se o marcador `TOKENSAVE` já existe (evita duplicação em execuções repetidas) e escreve as regras Caveman na posição correta do arquivo.
+
+#### 8. Skills (`skills/index.js`)
+
+Bundles de domínio que pré-configuram papel, modos disponíveis e condição de saída padrão. O menu de skills chama o builder com `modeOverride` já definido, permitindo ao usuário pular direto para o modo correto para aquele domínio.
+
+---
+
+### Fluxo de dados
 
 ```
 npx tokensave run
        │
        ▼
-┌─────────────────────────────────────────┐
-│           Pipeline Builder              │
-│                                         │
-│  PAPEL      → persona do AI             │
-│  TAREFA     → objetivo da sessão        │
-│  CONTEXTO   → código / arquivo / texto  │
-│  MODO       → modo de raciocínio        │
-│  CONDIÇÃO   → critério de conclusão     │
-└──────────────────┬──────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────────┐
-│              Compressor                 │
-│                                         │
-│  Headroom (Python) → -60 a -75%         │
-│  Native fallback   → -20 a -35%         │
-│  Caveman rules     → -40 a -60% output  │
-└──────────────────┬──────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────────┐
-│               Executor                  │
-│                                         │
-│  Claude / GPT / Gemini (streaming)      │
-│  Métricas salvas no SQLite local        │
-└──────────────────┬──────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────────┐
-│             Dashboard                   │
-│                                         │
-│  Terminal TUI  →  npx tokensave dash    │
-│  Web (Hono)    →  localhost:7878        │
-└─────────────────────────────────────────┘
+  [CLI / Commander]
+  registra subcomandos, lazy-load por await import()
+       │
+       ▼
+  [Pipeline Builder / Inquirer]
+  coleta: papel, tarefa, contexto, modo, condição
+       │
+       ▼
+  [Compressor]
+  ┌─ headroom (Python subprocess, 15s timeout)
+  │    └─ spawnSync('headroom', ['compress', '--stdin'])
+  └─ fallback nativo (JS puro)
+       ├─ remove comentários (regex)
+       ├─ colapsa blank lines
+       └─ truncamento inteligente se > maxTokens
+       │
+       ▼
+  [Caveman / system prompt]
+  getSystemSuffix(cavemanLevel) → injeta regras no final do systemPrompt do modo
+       │
+       ▼
+  [Executor]
+  ├─ detecta provedor pelo prefixo do modelo
+  ├─ exibe resumo pré-execução (tokens, custo estimado)
+  ├─ stream → Anthropic | OpenAI | Google
+  │    └─ escreve chunks em process.stdout conforme chegam
+  └─ salva métricas no SQLite
+       │
+       ▼
+  [Dashboard]
+  ├─ TUI: chalk + raw stdin
+  └─ Web: Hono + HTML vanilla + fetch polling 30s
 ```
 
 ---
@@ -168,39 +242,25 @@ tokensave/
 
 ---
 
-### Campos do pipeline
-
-| Campo | O que é | Exemplo |
-|-------|---------|---------|
-| **PAPEL** | Persona do AI | Security Auditor, Arquiteto Sênior |
-| **TAREFA** | O que precisa ser feito | "Revisar a API de autenticação" |
-| **CONTEXTO** | Código, caminho de arquivo ou texto | `./src/auth/` ou código colado |
-| **MODO** | Modo de raciocínio | SWOT, Pitfalls, Parallel Lens |
-| **CONDIÇÃO** | O que define "pronto" | "Todas as vulnerabilidades identificadas" |
-
----
-
 ### Modos de raciocínio
 
-| # | Modo | O que faz |
-|---|------|-----------|
-| 1 | Criar Sistema | Arquitetura do zero: stack, estrutura, decisões |
-| 2 | Revisar Código | Bugs, segurança, qualidade, code smell |
-| 3 | Documentação | README, ADR, changelog, JSDoc |
-| 4 | Consultor | ROI, risco, decisão como C-level |
-| 5 | SWOT | Forças, fraquezas, oportunidades, ameaças |
-| 6 | Compare | A vs B com critérios explícitos |
-| 7 | Multi-perspectiva | Dev + PM + User + Ops |
-| 8 | Parallel Lens | 3 abordagens simultâneas + matriz de decisão |
-| 9 | Pitfalls | O que pode dar errado, armadilhas, edge cases |
-| 10 | Metrics Mode | Define e mede KPIs |
-| 11 | Context Stack | Contexto progressivo sem explodir tokens |
+| # | Modo | O que faz | Caveman |
+|---|------|-----------|---------|
+| 1 | Criar Sistema | Arquitetura do zero: stack, estrutura, decisões | full |
+| 2 | Revisar Código | Bugs, segurança, qualidade, code smell | full |
+| 3 | Documentação | README, ADR, changelog, JSDoc | lite |
+| 4 | Consultor | ROI, risco, decisão como C-level | full |
+| 5 | SWOT | Forças, fraquezas, oportunidades, ameaças | full |
+| 6 | Compare | A vs B com critérios explícitos | full |
+| 7 | Multi-perspectiva | Dev + PM + User + Ops | full |
+| 8 | Parallel Lens | 3 abordagens simultâneas + matriz de decisão | ultra |
+| 9 | Pitfalls | O que pode dar errado, armadilhas, edge cases | full |
+| 10 | Metrics Mode | Define e mede KPIs | full |
+| 11 | Context Stack | Contexto progressivo sem explodir tokens | full |
 
 ---
 
 ### Skills — Bundles por domínio
-
-Acesse via `npx tokensave skills`:
 
 | Bundle | Papel padrão | Modos |
 |--------|-------------|-------|
@@ -215,29 +275,6 @@ Acesse via `npx tokensave skills`:
 
 ---
 
-### Compressão de tokens
-
-**Entrada (Headroom):** comprime código, logs e JSON antes de enviar para a API.
-- Com `headroom-ai` (Python 3.10+): economia de 60–75%
-- Fallback nativo (remoção de comentários + truncamento inteligente): 20–35%
-
-**Saída (Caveman):** regras injetadas no system prompt de cada modo eliminam filler, pleasantries e hedging — economia de 40–60% nas respostas.
-
----
-
-### Integração com AI tools
-
-`npx tokensave setup` detecta e injeta as regras Caveman nativamente:
-
-| Tool | O que é injetado |
-|------|-----------------|
-| Claude Code | `customInstructions` em `~/.claude/settings.json` |
-| Cursor | `cursor.rules` em `Cursor/User/settings.json` |
-| GitHub Copilot | `.github/copilot-instructions.md` na raiz do projeto |
-| Windsurf | `~/.codeium/windsurf/.windsurfrc` |
-
----
-
 ### Modelos suportados
 
 | Provedor | Modelos | Variável de ambiente |
@@ -248,11 +285,38 @@ Acesse via `npx tokensave skills`:
 
 ---
 
+### Créditos e dependências
+
+Este projeto é construído sobre o trabalho de projetos open source incríveis:
+
+| Pacote | Uso no tokensave | Repositório |
+|--------|-----------------|-------------|
+| [Commander.js](https://github.com/tj/commander.js) | Parser de subcomandos e flags da CLI | `tj/commander.js` |
+| [Inquirer.js](https://github.com/SBoudrias/Inquirer.js) | Formulário interativo do pipeline builder | `SBoudrias/Inquirer.js` |
+| [Chalk](https://github.com/chalk/chalk) | Cores e formatação no terminal | `chalk/chalk` |
+| [Hono](https://github.com/honojs/hono) | Web framework do dashboard — leve, zero-deps | `honojs/hono` |
+| [@hono/node-server](https://github.com/honojs/node-server) | Adapter Node.js para o Hono | `honojs/node-server` |
+| [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) | Banco SQLite local para histórico de métricas | `WiseLibs/better-sqlite3` |
+| [@anthropic-ai/sdk](https://github.com/anthropic-ai/anthropic-sdk-node) | Client oficial Anthropic com streaming | `anthropic-ai/anthropic-sdk-node` |
+| [openai](https://github.com/openai/openai-node) | Client oficial OpenAI com streaming | `openai/openai-node` |
+| [@google/generative-ai](https://github.com/google-gemini/generative-ai-js) | Client oficial Google Gemini | `google-gemini/generative-ai-js` |
+| [open](https://github.com/sindresorhus/open) | Abre o dashboard no browser | `sindresorhus/open` |
+| [headroom-ai](https://github.com/outlines-dev/headroom) | Compressor semântico de contexto (Python) | `outlines-dev/headroom` |
+| [vitest](https://github.com/vitest-dev/vitest) | Test runner (35 testes) | `vitest-dev/vitest` |
+
+---
+
 ### Requisitos
 
 - Node.js 18+
 - API key de pelo menos um provedor (Anthropic, OpenAI ou Google)
 - Python 3.10+ com `headroom-ai` para compressão máxima (opcional)
+
+---
+
+### Licença
+
+MIT © [Diego Lial](https://github.com/DiegoLial)
 
 ---
 
@@ -296,46 +360,120 @@ npx tokensave stats
 
 ---
 
-### How it works
+### How it works — full logic
+
+The system is composed of five independent layers that communicate in sequence:
+
+#### 1. CLI (Commander)
+
+The entry point is `bin/tokensave.js`, which loads `src/cli/index.js`. [Commander](https://github.com/tj/commander.js) registers subcommands (`run`, `setup`, `dash`, `skills`, `stats`, `config`). Each subcommand is a separate module in `src/cli/commands/` loaded lazily via `await import()` — this ensures the process starts instantly without loading unnecessary dependencies.
+
+#### 2. Pipeline Builder (`src/pipeline/builder.js`)
+
+When the user runs `tokensave run`, the builder opens an interactive form via [Inquirer.js](https://github.com/SBoudrias/Inquirer.js). The collected fields are:
+
+- **ROLE** — the persona the AI assumes (e.g. "Security Auditor"). Sets the tone and perspective of the response.
+- **TASK** — the session objective in natural language.
+- **CONTEXT** — code, file, or pasted text. The builder reads files from disk with `fs.readFileSync` when the user provides a path.
+- **MODE** — one of 11 reasoning modes. Each mode is an object with an optimized `systemPrompt`, `cavemanLevel`, and suggested `papeis`.
+- **CONDITION** — done-when criteria (e.g. "All critical vulnerabilities identified").
+
+The builder returns a `pipeline` object with these five fields, passed in full to the executor.
+
+#### 3. Compressor (`src/compressor/`)
+
+Before calling the API, the executor compresses the context in two stages:
+
+**Input — Headroom (`headroom.js`):**
+Attempts to run the `headroom` binary via `child_process.spawnSync`. [headroom-ai](https://github.com/outlines-dev/headroom) is a Python-based semantic text compressor that removes redundancy while preserving technical meaning. If the process returns status 0, the compressed text is used. If it fails (Python not installed, headroom not found, 15s timeout), falls back to native compression.
+
+**Native fallback (`native.js`):**
+Pure JavaScript compressor that:
+1. Removes line comments (`//` in JS/TS, `#` in Python) with regex that avoids matching inside strings
+2. Collapses multiple blank lines into one
+3. Removes trailing whitespace per line
+4. Applies smart truncation if context exceeds `maxTokens`: keeps the first and last half, inserting a `[truncated by tokensave]` marker in the middle
+
+Token estimation uses the `characters / 4` heuristic, which matches the empirical average of the GPT-4 tokenizer for code and technical text.
+
+**Output — Caveman (`caveman.js`):**
+Does not compress the sent context — it operates on the system prompt. Injects a writing rules block at the end of every mode's system prompt, instructing the model to respond in an extremely compact way. Three levels:
+- `lite` — removes only filler words and pleasantries, keeps full sentences
+- `full` — fragments OK, removes articles, hedging, uses short synonyms
+- `ultra` — heavy abbreviations, arrows for causality, minimum possible words
+
+#### 4. Executor (`src/pipeline/executor.js`)
+
+With the compressed context and assembled system prompt, the executor:
+
+1. **Detects the provider** by model prefix (`claude-*` → Anthropic, `gpt-*` / `o1-*` → OpenAI, `gemini-*` → Google)
+2. **Loads the API key** from `~/.tokensave/config.json` or environment variables (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_API_KEY`)
+3. **Assembles the `userMessage`** concatenating ROLE + TASK + compressed CONTEXT + CONDITION
+4. **Shows the pre-execution summary** with original tokens, post-compression tokens, estimated cost, and model
+5. **Streams output** — each provider has its own handler:
+   - Anthropic: uses `client.messages.stream()` from `@anthropic-ai/sdk`, iterates over `content_block_delta` events
+   - OpenAI: uses `client.chat.completions.create({ stream: true })` from `openai`, iterates over `choices[0].delta.content`
+   - Google: uses `genModel.generateContentStream()` from `@google/generative-ai`, iterates over `chunk.text()`
+6. **Persists metrics** to SQLite via `createStore()` — saves role, task, mode, model, tokens in/out, cost, and duration
+
+#### 5. Store (`src/store/db.js`)
+
+Uses [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) to store run history in `~/.tokensave/metrics.db`. The database is auto-created on first run via `CREATE TABLE IF NOT EXISTS`. Queries use prepared statements for performance. Exposed methods: `saveRun`, `getRecentRuns`, `getSummary`, `getTodaySummary`, `getModeStats`.
+
+#### 6. Dashboard
+
+**Terminal (`src/dashboard/tui.js`):** Uses `process.stdin.setRawMode(true)` to capture keystrokes without Enter. Renders an ASCII table with chalk. Keys: `r` refresh, `h` history, `w` open browser, `q` quit.
+
+**Web (`src/dashboard/web/`):** [Hono](https://github.com/honojs/hono) serves three REST endpoints (`/api/summary`, `/api/runs`, `/api/runs/export.csv`) and the static HTML. `index.html` is 100% vanilla — `fetch` + DOM — no bundler, no framework. Auto-refreshes every 30 seconds.
+
+#### 7. Setup & Injection (`src/detector/` + `src/injector/`)
+
+The detector uses `fs.existsSync` on known paths to identify which tools are installed. Each injector reads the tool's config file, checks whether the `TOKENSAVE` marker already exists (prevents duplication on repeated runs), and writes the Caveman rules at the correct position in the file.
+
+#### 8. Skills (`skills/index.js`)
+
+Domain bundles that pre-configure role, available modes, and default exit condition. The skills menu calls the builder with `modeOverride` already set, letting the user skip straight to the right mode for that domain.
+
+---
+
+### Data flow
 
 ```
 npx tokensave run
        │
        ▼
-┌─────────────────────────────────────────┐
-│           Pipeline Builder              │
-│                                         │
-│  ROLE       → AI persona                │
-│  TASK       → session objective         │
-│  CONTEXT    → code / file / text        │
-│  MODE       → reasoning mode            │
-│  CONDITION  → done-when criteria        │
-└──────────────────┬──────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────────┐
-│              Compressor                 │
-│                                         │
-│  Headroom (Python) → -60 to -75%        │
-│  Native fallback   → -20 to -35%        │
-│  Caveman rules     → -40 to -60% output │
-└──────────────────┬──────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────────┐
-│               Executor                  │
-│                                         │
-│  Claude / GPT / Gemini (streaming)      │
-│  Metrics saved to local SQLite          │
-└──────────────────┬──────────────────────┘
-                   │
-                   ▼
-┌─────────────────────────────────────────┐
-│             Dashboard                   │
-│                                         │
-│  Terminal TUI  →  npx tokensave dash    │
-│  Web (Hono)    →  localhost:7878        │
-└─────────────────────────────────────────┘
+  [CLI / Commander]
+  registers subcommands, lazy-load via await import()
+       │
+       ▼
+  [Pipeline Builder / Inquirer]
+  collects: role, task, context, mode, condition
+       │
+       ▼
+  [Compressor]
+  ┌─ headroom (Python subprocess, 15s timeout)
+  │    └─ spawnSync('headroom', ['compress', '--stdin'])
+  └─ native fallback (pure JS)
+       ├─ remove comments (regex)
+       ├─ collapse blank lines
+       └─ smart truncation if > maxTokens
+       │
+       ▼
+  [Caveman / system prompt]
+  getSystemSuffix(cavemanLevel) → appends rules to mode's systemPrompt
+       │
+       ▼
+  [Executor]
+  ├─ detect provider by model prefix
+  ├─ show pre-execution summary (tokens, estimated cost)
+  ├─ stream → Anthropic | OpenAI | Google
+  │    └─ writes chunks to process.stdout as they arrive
+  └─ save metrics to SQLite
+       │
+       ▼
+  [Dashboard]
+  ├─ TUI: chalk + raw stdin
+  └─ Web: Hono + vanilla HTML + fetch polling 30s
 ```
 
 ---
@@ -412,39 +550,25 @@ tokensave/
 
 ---
 
-### Pipeline fields
-
-| Field | What it is | Example |
-|-------|-----------|---------|
-| **ROLE** | AI persona | Security Auditor, Senior Architect |
-| **TASK** | What needs to be done | "Review the authentication API" |
-| **CONTEXT** | Code, file path, or text | `./src/auth/` or pasted code |
-| **MODE** | Reasoning mode | SWOT, Pitfalls, Parallel Lens |
-| **CONDITION** | Done-when criteria | "All critical vulnerabilities identified" |
-
----
-
 ### Reasoning modes
 
-| # | Mode | What it does |
-|---|------|-------------|
-| 1 | Criar Sistema | Architecture from scratch: stack, structure, decisions |
-| 2 | Revisar Código | Bugs, security, quality, code smell |
-| 3 | Documentação | README, ADR, changelog, JSDoc |
-| 4 | Consultor | ROI, risk, decisions as C-level |
-| 5 | SWOT | Strengths, weaknesses, opportunities, threats |
-| 6 | Compare | A vs B with explicit criteria |
-| 7 | Multi-perspectiva | Dev + PM + User + Ops angles |
-| 8 | Parallel Lens | 3 independent approaches + decision matrix |
-| 9 | Pitfalls | What can go wrong, traps, edge cases |
-| 10 | Metrics Mode | Define and measure KPIs |
-| 11 | Context Stack | Progressive context without token explosion |
+| # | Mode | What it does | Caveman |
+|---|------|-------------|---------|
+| 1 | Criar Sistema | Architecture from scratch: stack, structure, decisions | full |
+| 2 | Revisar Código | Bugs, security, quality, code smell | full |
+| 3 | Documentação | README, ADR, changelog, JSDoc | lite |
+| 4 | Consultor | ROI, risk, decisions as C-level | full |
+| 5 | SWOT | Strengths, weaknesses, opportunities, threats | full |
+| 6 | Compare | A vs B with explicit criteria | full |
+| 7 | Multi-perspectiva | Dev + PM + User + Ops angles | full |
+| 8 | Parallel Lens | 3 independent approaches + decision matrix | ultra |
+| 9 | Pitfalls | What can go wrong, traps, edge cases | full |
+| 10 | Metrics Mode | Define and measure KPIs | full |
+| 11 | Context Stack | Progressive context without token explosion | full |
 
 ---
 
 ### Skills — Domain bundles
-
-Access via `npx tokensave skills`:
 
 | Bundle | Default Role | Modes |
 |--------|-------------|-------|
@@ -459,29 +583,6 @@ Access via `npx tokensave skills`:
 
 ---
 
-### Token compression
-
-**Input (Headroom):** compresses code, logs, and JSON before sending to the API.
-- With `headroom-ai` (Python 3.10+): 60–75% savings
-- Native fallback (comment removal + smart truncation): 20–35%
-
-**Output (Caveman):** rules injected into every mode's system prompt eliminate filler, pleasantries, and hedging — 40–60% savings on responses.
-
----
-
-### AI tool integration
-
-`npx tokensave setup` detects and natively injects Caveman rules into:
-
-| Tool | What gets injected |
-|------|--------------------|
-| Claude Code | `customInstructions` in `~/.claude/settings.json` |
-| Cursor | `cursor.rules` in `Cursor/User/settings.json` |
-| GitHub Copilot | `.github/copilot-instructions.md` in project root |
-| Windsurf | `~/.codeium/windsurf/.windsurfrc` |
-
----
-
 ### Supported models
 
 | Provider | Models | Env var |
@@ -489,6 +590,27 @@ Access via `npx tokensave skills`:
 | Anthropic | claude-sonnet-4-6, claude-haiku-4-5 | `ANTHROPIC_API_KEY` |
 | OpenAI | gpt-4o, gpt-4o-mini | `OPENAI_API_KEY` |
 | Google | gemini-1.5-pro, gemini-1.5-flash | `GOOGLE_API_KEY` |
+
+---
+
+### Credits & dependencies
+
+This project is built on top of incredible open source work:
+
+| Package | How it's used | Repository |
+|---------|--------------|------------|
+| [Commander.js](https://github.com/tj/commander.js) | CLI subcommand parser and flag handling | `tj/commander.js` |
+| [Inquirer.js](https://github.com/SBoudrias/Inquirer.js) | Interactive pipeline builder form | `SBoudrias/Inquirer.js` |
+| [Chalk](https://github.com/chalk/chalk) | Terminal colors and formatting | `chalk/chalk` |
+| [Hono](https://github.com/honojs/hono) | Dashboard web framework — lightweight, zero-deps | `honojs/hono` |
+| [@hono/node-server](https://github.com/honojs/node-server) | Node.js adapter for Hono | `honojs/node-server` |
+| [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) | Local SQLite for metrics history | `WiseLibs/better-sqlite3` |
+| [@anthropic-ai/sdk](https://github.com/anthropic-ai/anthropic-sdk-node) | Official Anthropic client with streaming | `anthropic-ai/anthropic-sdk-node` |
+| [openai](https://github.com/openai/openai-node) | Official OpenAI client with streaming | `openai/openai-node` |
+| [@google/generative-ai](https://github.com/google-gemini/generative-ai-js) | Official Google Gemini client | `google-gemini/generative-ai-js` |
+| [open](https://github.com/sindresorhus/open) | Opens the dashboard in the browser | `sindresorhus/open` |
+| [headroom-ai](https://github.com/outlines-dev/headroom) | Semantic context compressor (Python) | `outlines-dev/headroom` |
+| [vitest](https://github.com/vitest-dev/vitest) | Test runner (35 tests) | `vitest-dev/vitest` |
 
 ---
 
@@ -502,4 +624,4 @@ Access via `npx tokensave skills`:
 
 ### License
 
-MIT
+MIT © [Diego Lial](https://github.com/DiegoLial)
