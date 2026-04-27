@@ -1,11 +1,15 @@
 import { Command } from 'commander'
+import { createRequire } from 'module'
+
+const require = createRequire(import.meta.url)
+const { version } = require('../../package.json')
 
 const program = new Command()
 
 program
   .name('tokensave')
   .description('Structured AI pipeline for any tool. One command. 70% less tokens.')
-  .version('0.1.0')
+  .version(version)
 
 program
   .command('setup')
