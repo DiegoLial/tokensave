@@ -1,16 +1,18 @@
 import chalk from 'chalk'
 import { createStore } from '../../store/db.js'
+import { basename } from 'path'
 
 export async function runStats() {
   const store = createStore()
-  const total = store.getSummary()
-  const today = store.getTodaySummary()
-  const modes = store.getModeStats()
-  const recent = store.getRecentRuns(5)
+  const total    = store.getSummary()
+  const today    = store.getTodaySummary()
+  const modes    = store.getModeStats()
+  const projects = store.getProjectStats()
+  const recent   = store.getRecentRuns(5)
   store.close()
 
   const saved = total.total_tokens_original - total.total_tokens_compressed
-  const pct = Math.round(total.avg_compression_pct ?? 0)
+  const pct   = Math.round(total.avg_compression_pct ?? 0)
 
   console.log(chalk.bold.cyan('\n⚡ Tokensave Stats\n'))
 
@@ -28,12 +30,22 @@ export async function runStats() {
     console.log()
   }
 
+  if (projects.length > 1) {
+    console.log(chalk.dim('  Por projeto:'))
+    for (const p of projects.slice(0, 6)) {
+      const name   = p.project === '(global)' ? '(global)' : basename(p.project)
+      const pctP   = p.tokens_original > 0
+        ? Math.round((1 - p.tokens_compressed / p.tokens_original) * 100) : 0
+      console.log(chalk.dim(`    ${name.padEnd(24)} ${String(p.runs).padStart(3)} runs  -${pctP}%  $${Number(p.cost_usd).toFixed(4)}`))
+    }
+    console.log()
+  }
+
   if (recent.length > 0) {
     console.log(chalk.dim('  Últimas execuções:'))
     for (const r of recent) {
       const pctR = r.tokens_original > 0
-        ? Math.round((1 - r.tokens_compressed / r.tokens_original) * 100)
-        : 0
+        ? Math.round((1 - r.tokens_compressed / r.tokens_original) * 100) : 0
       const time = r.created_at?.slice(0, 16) ?? ''
       console.log(chalk.dim(`    ${time}  ${r.modo.padEnd(18)}  -${pctR}%  $${Number(r.cost_usd).toFixed(4)}`))
     }

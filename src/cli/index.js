@@ -22,7 +22,17 @@ program
 program
   .command('run')
   .description('Executa o pipeline builder interativo')
-  .option('--mode <mode>', 'Pula menu e vai direto para um modo específico')
+  .option('--mode <mode>',    'Modo de raciocínio (ex: swot, pitfalls)')
+  .option('--papel <papel>',  'Papel/persona do AI (modo não-interativo)')
+  .option('--tarefa <tarefa>','Tarefa a executar (modo não-interativo)')
+  .option('--condicao <c>',   'Condição de saída (modo não-interativo)')
+  .option('--context-file <path>', 'Arquivo de contexto (modo não-interativo)')
+  .option('--context-url <url>',   'URL de contexto — faz fetch do conteúdo')
+  .option('--context-text <text>', 'Texto de contexto inline')
+  .option('--model <model>',  'Modelo a usar (ex: gpt-4o, ollama/llama3)')
+  .option('--save-as <name>', 'Salva o pipeline como template com este nome')
+  .option('--template <name>','Carrega um template salvo previamente')
+  .option('--yes',            'Confirma execução sem perguntar')
   .action(async (opts) => {
     const { runPipeline } = await import('./commands/run.js')
     await runPipeline(opts)
@@ -51,6 +61,23 @@ program
   .action(async () => {
     const { runStats } = await import('./commands/stats.js')
     await runStats()
+  })
+
+program
+  .command('mcp')
+  .description('Inicia o MCP server de compressão (usado pelo Claude Code)')
+  .action(async () => {
+    const { runMCP } = await import('./commands/mcp.js')
+    await runMCP()
+  })
+
+program
+  .command('templates')
+  .description('Lista e gerencia templates de pipeline salvos')
+  .option('--delete <name>', 'Remove um template')
+  .action(async (opts) => {
+    const { runTemplates } = await import('./commands/templates.js')
+    await runTemplates(opts)
   })
 
 program
