@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokensave Dashboard</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:#0d1117;color:#c9d1d9;min-height:100vh;padding:24px}
+  h1{font-size:1.4rem;color:#58a6ff;margin-bottom:24px;letter-spacing:.05em}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+  .card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:20px}
+  .card-label{font-size:.75rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+  .card-value{font-size:1.8rem;font-weight:700;color:#e6edf3}
+  .card-sub{font-size:.8rem;color:#3fb950;margin-top:4px}
+  h2{font-size:1rem;color:#8b949e;margin-bottom:12px;margin-top:32px;text-transform:uppercase;letter-spacing:.06em}
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  th{text-align:left;color:#8b949e;padding:8px 12px;border-bottom:1px solid #21262d;font-weight:500}
+  td{padding:8px 12px;border-bottom:1px solid #161b22;color:#c9d1d9}
+  tr:hover td{background:#161b22}
+  .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:600}
+  .badge-green{background:#1a4a1a;color:#3fb950}
+  .badge-blue{background:#0d2d4a;color:#58a6ff}
+  .filters{display:flex;gap:12px;margin-bottom:16px;align-items:center}
+  .filters input,.filters select{background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:6px 10px;border-radius:6px;font-size:.85rem}
+  .btn{background:#21262d;border:1px solid #30363d;color:#c9d1d9;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
+  .btn:hover{background:#30363d}
+  .bar-wrap{background:#21262d;border-radius:4px;height:8px;overflow:hidden;margin-top:4px}
+  .bar{background:#3fb950;height:100%}
+  .chart-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:.82rem}
+  .chart-label{width:160px;color:#8b949e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chart-bar-wrap{flex:1;background:#21262d;border-radius:4px;height:12px;overflow:hidden}
+  .chart-bar{background:#58a6ff;height:100%}
+  .chart-count{width:40px;text-align:right;color:#8b949e}
+  @media(max-width:600px){.cards{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<h1>⚡ TOKENSAVE</h1>
+<div class="cards" id="cards">
+  <div class="card"><div class="card-label">Total Pipelines</div><div class="card-value" id="total-runs">—</div></div>
+  <div class="card"><div class="card-label">Tokens economizados</div><div class="card-value" id="tokens-saved">—</div><div class="card-sub" id="tokens-pct"></div></div>
+  <div class="card"><div class="card-label">Custo total</div><div class="card-value" id="total-cost">—</div></div>
+  <div class="card"><div class="card-label">Hoje — pipelines</div><div class="card-value" id="today-runs">—</div><div class="card-sub" id="today-cost"></div></div>
+</div>
+
+<h2>Uso por modo</h2>
+<div id="mode-chart"></div>
+
+<h2>Histórico de execuções</h2>
+<div class="filters">
+  <input id="filter-text" type="text" placeholder="Filtrar tarefa ou modo..." oninput="renderTable()">
+  <select id="filter-modo" onchange="renderTable()"><option value="">Todos os modos</option></select>
+  <button class="btn" onclick="exportCSV()">⬇ Exportar CSV</button>
+  <button class="btn" onclick="load()">↺ Atualizar</button>
+</div>
+<table>
+  <thead><tr>
+    <th>Data/Hora</th><th>Papel</th><th>Tarefa</th><th>Modo</th>
+    <th>Compressão</th><th>Custo</th><th>Tempo</th><th>Modelo</th>
+  </tr></thead>
+  <tbody id="runs-body"></tbody>
+</table>
+
+<script>
+let allRuns = []
+
+function fmt(n){ return Number(n||0).toLocaleString('pt-BR') }
+function fmtCost(v){ return '$'+(Number(v||0).toFixed(4)) }
+function fmtPct(orig,comp){
+  if(!orig||orig===0) return '—'
+  return Math.round((1-comp/orig)*100)+'%'
+}
+function fmtDur(ms){ return (ms/1000).toFixed(1)+'s' }
+function shortModel(m){ return (m||'').replace('claude-sonnet-4-6','sonnet-4.6').replace('claude-haiku-4-5','haiku-4.5').slice(0,14) }
+
+async function load(){
+  const [sumRes, runsRes] = await Promise.all([
+    fetch('/api/summary').then(r=>r.json()),
+    fetch('/api/runs?limit=200').then(r=>r.json())
+  ])
+
+  const {total,today,modes} = sumRes
+  const saved = total.total_tokens_original - total.total_tokens_compressed
+  const pct = total.total_tokens_original > 0
+    ? Math.round(saved/total.total_tokens_original*100) : 0
+
+  document.getElementById('total-runs').textContent = fmt(total.total_runs)
+  document.getElementById('tokens-saved').textContent = fmt(saved)
+  document.getElementById('tokens-pct').textContent = pct ? `-${pct}%` : ''
+  document.getElementById('total-cost').textContent = fmtCost(total.total_cost_usd)
+  document.getElementById('today-runs').textContent = fmt(today.runs_today)
+  document.getElementById('today-cost').textContent = fmtCost(today.cost_today)+' hoje'
+
+  const maxCount = modes[0]?.count ?? 1
+  document.getElementById('mode-chart').innerHTML = modes.map(m=>`
+    <div class="chart-row">
+      <div class="chart-label">${m.modo}</div>
+      <div class="chart-bar-wrap"><div class="chart-bar" style="width:${Math.round(m.count/maxCount*100)}%"></div></div>
+      <div class="chart-count">${m.count}</div>
+    </div>
+  `).join('')
+
+  allRuns = runsRes
+
+  const modoSel = document.getElementById('filter-modo')
+  const existing = [...modoSel.options].map(o=>o.value)
+  modes.forEach(m=>{ if(!existing.includes(m.modo)){ const o=document.createElement('option'); o.value=m.modo; o.textContent=m.modo; modoSel.appendChild(o) } })
+
+  renderTable()
+}
+
+function renderTable(){
+  const text = document.getElementById('filter-text').value.toLowerCase()
+  const modo = document.getElementById('filter-modo').value
+  const filtered = allRuns.filter(r=>
+    (!text || r.tarefa?.toLowerCase().includes(text) || r.modo?.includes(text)) &&
+    (!modo || r.modo === modo)
+  )
+
+  document.getElementById('runs-body').innerHTML = filtered.map(r=>`
+    <tr>
+      <td>${r.created_at?.slice(0,16)??'—'}</td>
+      <td>${r.papel||'—'}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.tarefa||''}">${r.tarefa||'—'}</td>
+      <td><span class="badge badge-blue">${r.modo||'—'}</span></td>
+      <td><span class="badge badge-green">-${fmtPct(r.tokens_original,r.tokens_compressed)}</span></td>
+      <td>${fmtCost(r.cost_usd)}</td>
+      <td>${fmtDur(r.duration_ms)}</td>
+      <td>${shortModel(r.model)}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="8" style="text-align:center;color:#8b949e;padding:24px">Nenhuma execução</td></tr>'
+}
+
+function exportCSV(){ window.location = '/api/runs/export.csv' }
+
+load()
+setInterval(load, 30000)
+</script>
+</body>
+</html>
