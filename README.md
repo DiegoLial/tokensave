@@ -16,9 +16,23 @@
 
 ## 🇧🇷 Português
 
+### O problema
+
+Você usa Claude Code, Cursor, Copilot ou Windsurf todo dia — e provavelmente está desperdiçando a maioria dos tokens que paga.
+
+**No input:** contexto inflado com comentários, linhas em branco, código repetido e texto que não acrescenta nada ao modelo. Tudo isso vai para a API e você paga por cada caractere.
+
+**No output:** o modelo responde com frases de cortesia ("Claro! Fico feliz em ajudar..."), hedging ("pode ser que...", "talvez valha considerar..."), repetição do que já foi dito e parágrafos que poderiam ser uma linha. Você paga pelo ruído, não pela informação.
+
+**Na estrutura:** prompts ad-hoc sem papel definido, sem modo de raciocínio adequado para a tarefa e sem critério de conclusão geram respostas genéricas. Um prompt vago para revisar código produz uma resposta superficial. O mesmo contexto enviado com o papel certo, no modo certo, produz uma análise cirúrgica — com menos tokens.
+
+**O resultado:** custo alto, respostas mediocres, zero visibilidade do que está sendo gasto.
+
+---
+
 ### O que é
 
-tokensave é uma CLI que estrutura como você interage com AI. Em vez de enviar prompts ad-hoc, você define **papel → tarefa → contexto → modo de raciocínio → condição de saída**, o sistema comprime o contexto automaticamente, chama a API e streama o resultado no terminal. Cada execução é salva localmente com métricas de tokens e custo.
+tokensave resolve os três problemas ao mesmo tempo. É uma CLI que estrutura como você interage com AI: você define **papel → tarefa → contexto → modo de raciocínio → condição de saída**, o sistema comprime o contexto automaticamente, injeta regras de compressão no output, chama a API e streama o resultado no terminal. Cada execução é salva localmente com métricas de tokens e custo real.
 
 **Economia típica: 60–75% nos tokens de entrada + 40–60% nos tokens de saída.**
 
@@ -324,9 +338,23 @@ MIT © [Diego Lial](https://github.com/DiegoLial)
 
 ## 🇺🇸 English
 
+### The problem
+
+You use Claude Code, Cursor, Copilot, or Windsurf every day — and you're probably wasting most of the tokens you're paying for.
+
+**On the input side:** bloated context full of comments, blank lines, repeated code, and text that adds no signal for the model. All of it goes to the API, and you pay for every character.
+
+**On the output side:** the model responds with pleasantries ("Sure! I'd be happy to help..."), hedging ("it might be worth considering...", "you could potentially..."), repetition of what was already said, and paragraphs that could be a single line. You pay for the noise, not the information.
+
+**On the structure side:** ad-hoc prompts with no defined role, no reasoning mode matched to the task, and no exit condition produce generic responses. A vague prompt to review code produces a shallow answer. The same context sent with the right role, in the right mode, produces a surgical analysis — with fewer tokens.
+
+**The result:** high cost, mediocre responses, and zero visibility into what's being spent.
+
+---
+
 ### What it is
 
-tokensave is a CLI that structures how you interact with AI. Instead of ad-hoc prompts, you define **role → task → context → reasoning mode → exit condition** — the system auto-compresses the context, calls the API, and streams the result to your terminal. Every run is saved locally with token and cost metrics.
+tokensave solves all three problems at once. It's a CLI that structures how you interact with AI: you define **role → task → context → reasoning mode → exit condition** — the system auto-compresses the context, injects output compression rules, calls the API, and streams the result to your terminal. Every run is saved locally with token and cost metrics.
 
 **Typical savings: 60–75% on input tokens + 40–60% on output tokens.**
 
