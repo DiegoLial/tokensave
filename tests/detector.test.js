@@ -6,7 +6,7 @@ vi.mock('fs', async () => {
 })
 
 import { existsSync } from 'fs'
-import { detectTools } from '../src/detector/index.js'
+import { detectTools, getToolInfo, ALL_TOOLS } from '../src/detector/index.js'
 
 describe('detectTools', () => {
   beforeEach(() => { existsSync.mockReset() })
@@ -40,5 +40,41 @@ describe('detectTools', () => {
     const tools = detectTools()
     expect(tools).toContain('claude-code')
     expect(tools).toContain('cursor')
+  })
+})
+
+describe('getToolInfo', () => {
+  it('returns info object for claude-code', () => {
+    const info = getToolInfo('claude-code')
+    expect(info).toBeDefined()
+    expect(info.id).toBe('claude-code')
+    expect(info.name).toBeTypeOf('string')
+    expect(info.name.length).toBeGreaterThan(0)
+  })
+
+  it('returns info object for cursor', () => {
+    const info = getToolInfo('cursor')
+    expect(info).toBeDefined()
+    expect(info.id).toBe('cursor')
+  })
+
+  it('returns undefined for unknown tool', () => {
+    const info = getToolInfo('unknown-tool')
+    expect(info).toBeUndefined()
+  })
+})
+
+describe('ALL_TOOLS', () => {
+  it('is a non-empty array of strings', () => {
+    expect(Array.isArray(ALL_TOOLS)).toBe(true)
+    expect(ALL_TOOLS.length).toBeGreaterThan(0)
+    for (const t of ALL_TOOLS) expect(typeof t).toBe('string')
+  })
+
+  it('includes the four known tools', () => {
+    expect(ALL_TOOLS).toContain('claude-code')
+    expect(ALL_TOOLS).toContain('cursor')
+    expect(ALL_TOOLS).toContain('copilot')
+    expect(ALL_TOOLS).toContain('windsurf')
   })
 })
