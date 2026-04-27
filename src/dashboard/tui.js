@@ -91,8 +91,10 @@ function renderDash(store) {
 export async function runTUI({ web = false } = {}) {
   const store = createStore()
 
-  if (!process.stdin.isTTY) {
+  if (!process.stdin.isTTY || typeof process.stdin.setRawMode !== 'function') {
     renderDash(store)
+    if (!process.stdin.isTTY) { store.close(); return }
+    console.log(chalk.dim('\n  Terminal não suporta modo interativo. Use Ctrl+C para sair.\n'))
     store.close()
     return
   }
