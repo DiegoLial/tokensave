@@ -247,12 +247,100 @@ tokensave/
 |---------|-----------|
 | `npx tokensave run` | Pipeline builder interativo |
 | `npx tokensave run --mode swot` | Pula menu, vai direto para o modo |
-| `npx tokensave setup` | Detecta AI tools e injeta Caveman |
-| `npx tokensave skills` | Menu de bundles por domínio |
+| `npx tokensave run --papel "..." --tarefa "..." --modo pitfalls --yes` | Modo não-interativo (scripts/CI) |
+| `npx tokensave run --context-url https://...` | Usa URL como contexto |
+| `npx tokensave run --model ollama/llama3` | Modelo local via Ollama (sem API key) |
+| `npx tokensave run --save-as minha-revisao` | Salva pipeline como template |
+| `npx tokensave run --template minha-revisao` | Carrega template salvo |
+| `npx tokensave templates` | Lista e gerencia templates salvos |
+| `npx tokensave setup` | Detecta AI tools, injeta Caveman + MCP server |
+| `npx tokensave skills` | Menu de bundles por domínio (com encadeamento) |
 | `npx tokensave dash` | Dashboard terminal |
 | `npx tokensave dash --web` | Dashboard web em localhost:7878 |
-| `npx tokensave stats` | Resumo rápido de tokens economizados |
+| `npx tokensave stats` | Resumo de tokens economizados por projeto |
 | `npx tokensave config` | Configura API keys e modelo padrão |
+| `npx tokensave mcp` | Inicia o MCP server de compressão (stdio) |
+
+---
+
+### Modo não-interativo
+
+Útil em scripts, CI e automações:
+
+```bash
+# Executa sem nenhum prompt
+npx tokensave run \
+  --papel "Security Auditor" \
+  --tarefa "Revisar este endpoint para vulnerabilidades" \
+  --context-file ./src/api/auth.js \
+  --modo revisar-codigo \
+  --condicao "Todos os issues críticos identificados" \
+  --yes
+
+# Com URL como contexto
+npx tokensave run \
+  --papel "Tech Lead" \
+  --tarefa "Resumir as mudanças desta PR" \
+  --context-url https://github.com/org/repo/pull/42 \
+  --modo consultor \
+  --yes
+
+# Modelo local sem API key
+npx tokensave run --modelo "Tech Lead" --tarefa "Revisar o código" \
+  --model ollama/llama3 --modo revisar-codigo --yes
+```
+
+---
+
+### Templates
+
+Salve configurações de pipeline para reusar:
+
+```bash
+# Salvar
+npx tokensave run --save-as security-weekly
+
+# Reusar (preenche papel, modo e condição automaticamente)
+npx tokensave run --template security-weekly
+
+# Listar
+npx tokensave templates
+
+# Remover
+npx tokensave templates --delete security-weekly
+```
+
+---
+
+### Ollama (modelos locais)
+
+Sem API key, sem custo por token:
+
+```bash
+# Qualquer modelo disponível no Ollama local
+npx tokensave run --model ollama/llama3
+npx tokensave run --model ollama/codellama
+npx tokensave run --model ollama/mistral
+
+# URL base customizada (padrão: http://localhost:11434/v1)
+npx tokensave config  # → definir ollama_base_url
+```
+
+---
+
+### MCP Server
+
+O tokensave expõe um MCP server que o Claude Code usa para comprimir contexto automaticamente antes de cada chamada de API:
+
+```bash
+# Instalado automaticamente pelo setup no ~/.claude/settings.json
+npx tokensave setup
+
+# Ou iniciar manualmente
+npx tokensave mcp
+```
+
+A ferramenta exposta é `compress_context` — recebe texto, retorna versão comprimida com tokens originais, comprimidos e método usado.
 
 ---
 
@@ -569,12 +657,94 @@ tokensave/
 |---------|-------------|
 | `npx tokensave run` | Interactive pipeline builder |
 | `npx tokensave run --mode swot` | Skip menu, jump to a specific mode |
-| `npx tokensave setup` | Detect AI tools + inject Caveman rules |
-| `npx tokensave skills` | Domain skill bundle menu |
+| `npx tokensave run --papel "..." --tarefa "..." --modo pitfalls --yes` | Non-interactive mode (scripts/CI) |
+| `npx tokensave run --context-url https://...` | Fetch URL as context |
+| `npx tokensave run --model ollama/llama3` | Local model via Ollama (no API key needed) |
+| `npx tokensave run --save-as my-review` | Save pipeline as a named template |
+| `npx tokensave run --template my-review` | Load a saved template |
+| `npx tokensave templates` | List and manage saved templates |
+| `npx tokensave setup` | Detect AI tools, inject Caveman + MCP server |
+| `npx tokensave skills` | Domain skill bundle menu (with chaining) |
 | `npx tokensave dash` | Terminal dashboard |
 | `npx tokensave dash --web` | Web dashboard at localhost:7878 |
-| `npx tokensave stats` | Quick token savings summary |
+| `npx tokensave stats` | Token savings summary per project |
 | `npx tokensave config` | Set API keys and default model |
+| `npx tokensave mcp` | Start the compression MCP server (stdio) |
+
+---
+
+### Non-interactive mode
+
+Useful in scripts, CI pipelines, and automation:
+
+```bash
+# No prompts — executes immediately
+npx tokensave run \
+  --papel "Security Auditor" \
+  --tarefa "Review this endpoint for vulnerabilities" \
+  --context-file ./src/api/auth.js \
+  --modo revisar-codigo \
+  --condicao "All critical issues identified" \
+  --yes
+
+# With URL as context
+npx tokensave run \
+  --papel "Tech Lead" \
+  --tarefa "Summarize the changes in this PR" \
+  --context-url https://github.com/org/repo/pull/42 \
+  --modo consultor \
+  --yes
+```
+
+---
+
+### Templates
+
+Save pipeline configurations to reuse:
+
+```bash
+# Save
+npx tokensave run --save-as security-weekly
+
+# Reuse (pre-fills role, mode, and condition)
+npx tokensave run --template security-weekly
+
+# List all
+npx tokensave templates
+
+# Delete
+npx tokensave templates --delete security-weekly
+```
+
+---
+
+### Ollama (local models)
+
+No API key, no per-token cost:
+
+```bash
+npx tokensave run --model ollama/llama3
+npx tokensave run --model ollama/codellama
+npx tokensave run --model ollama/mistral
+```
+
+Requires Ollama running locally at `http://localhost:11434`. Configure a custom base URL via `tokensave config`.
+
+---
+
+### MCP Server
+
+tokensave exposes an MCP server that Claude Code uses to automatically compress context before each API call:
+
+```bash
+# Auto-registered in ~/.claude/settings.json by setup
+npx tokensave setup
+
+# Start manually
+npx tokensave mcp
+```
+
+Exposes the `compress_context` tool — takes text, returns compressed version with token counts and compression method.
 
 ---
 
