@@ -33,6 +33,7 @@ program
   .option('--save-as <name>', 'Salva o pipeline como template com este nome')
   .option('--template <name>','Carrega um template salvo previamente')
   .option('--yes',            'Confirma execução sem perguntar')
+  .option('--dry-run',        'Mostra prompt comprimido e custo estimado sem chamar a API')
   .action(async (opts) => {
     const { runPipeline } = await import('./commands/run.js')
     await runPipeline(opts)
@@ -86,6 +87,14 @@ program
   .action(async () => {
     const { runConfig } = await import('./commands/config.js')
     await runConfig()
+  })
+
+program
+  .command('listen')
+  .description('Modo daemon — executa jobs enviados pelo dashboard via WebSocket')
+  .action(async () => {
+    const { startListen } = await import('./commands/listen.js')
+    await startListen()
   })
 
 program.parse()

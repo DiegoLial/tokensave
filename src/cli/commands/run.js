@@ -3,10 +3,8 @@ import inquirer from 'inquirer'
 import { loadTemplate, saveTemplate } from '../../store/templates.js'
 
 export async function runPipeline(opts = {}) {
-  console.log(chalk.bold.cyan('\n⚡ Tokensave — Pipeline\n'))
-
   const { buildPipeline } = await import('../../pipeline/builder.js')
-  const { executePipeline } = await import('../../pipeline/executor.js')
+  const { runPipeline: execute } = await import('../../core/runner.js')
   const { getModeById, getModeChoices } = await import('../../pipeline/modes/index.js')
 
   // Resolve mode id from --mode flag
@@ -42,17 +40,50 @@ export async function runPipeline(opts = {}) {
   let pipeline
 
   if (nonInteractive) {
+    // Collect context from all sources
     let contexto = opts.contextText || templateDefaults.contexto || ''
 
+    // stdin pipe support
+    if (!process.stdin.isTTY) {
+      const chunks = []
+      process.stdin.resume()
+      process.stdin.setEncoding('utf8')
+      for await (const chunk of process.stdin) chunks.push(chunk)
+      if (chunks.length) contexto = chunks.join('') + (contexto ? '\n' + contexto : '')
+    }
+
+    // multiple --context-file (Commander stores repeated options as array)
     if (opts.contextFile) {
       const { readFileSync } = await import('fs')
-      try { contexto = readFileSync(opts.contextFile.trim(), 'utf8') } catch {
-        console.error(chalk.red(`✗ Não foi possível ler: ${opts.contextFile}`))
-        process.exit(1)
+      const files = Array.isArray(opts.contextFile) ? opts.contextFile : [opts.contextFile]
+      for (const f of files) {
+        try {
+          contexto += (contexto ? '\n\n---\n\n' : '') + readFileSync(f.trim(), 'utf8')
+        } catch {
+          console.error(chalk.red(`✗ Não foi possível ler: ${f}`))
+          process.exit(1)
+        }
       }
     }
 
-    if (opts.contextUrl) contexto = await fetchUrl(opts.contextUrl)
+    if (opts.contextUrl) {
+      try {
+        process.stdout.write(chalk.dim(`  Fetching ${opts.contextUrl} ...\n`))
+        const res = await fetch(opts.contextUrl)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const raw = await res.text()
+        const clean = raw
+          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/\s{3,}/g, '\n\n')
+          .trim()
+        contexto = (contexto ? contexto + '\n\n---\n\n' : '') + clean
+      } catch (err) {
+        console.error(chalk.red(`✗ Falha ao buscar URL: ${opts.contextUrl}`))
+        process.exit(1)
+      }
+    }
 
     pipeline = {
       papel:    opts.papel    || templateDefaults.papel,
@@ -60,15 +91,9 @@ export async function runPipeline(opts = {}) {
       contexto,
       modo:     modeOverride  || templateDefaults.modo,
       condicao: opts.condicao || templateDefaults.condicao || '',
+      model:    opts.model,
     }
-
-    console.log(chalk.dim(`  Papel:    ${pipeline.papel}`))
-    console.log(chalk.dim(`  Tarefa:   ${pipeline.tarefa}`))
-    console.log(chalk.dim(`  Modo:     ${pipeline.modo}`))
-    if (pipeline.condicao) console.log(chalk.dim(`  Condição: ${pipeline.condicao}`))
-    console.log()
   } else {
-    // Interactive — pre-fill what we have from flags/template
     pipeline = await buildPipeline({
       modeOverride,
       defaults: {
@@ -80,12 +105,33 @@ export async function runPipeline(opts = {}) {
         contextText: opts.contextText,
       },
     })
+    if (opts.model) pipeline.model = opts.model
   }
 
   // Save template if --save-as given
   if (opts.saveAs) {
     saveTemplate(opts.saveAs, { papel: pipeline.papel, modo: pipeline.modo, condicao: pipeline.condicao })
     console.log(chalk.green(`  ✓ Template "${opts.saveAs}" salvo.\n`))
+  }
+
+  // --dry-run: show compressed prompt + estimated cost without calling API
+  if (opts.dryRun) {
+    const { compress } = await import('../../core/compressor/index.js')
+    const { estimateCost } = await import('../../core/metrics.js')
+    const { getConfig } = await import('../../core/config.js')
+    const cfg = getConfig()
+    const model = pipeline.model ?? cfg.default_model
+    const result = await compress(pipeline.contexto ?? '')
+    const cost = estimateCost(model, result.compressedTokens + Math.ceil((pipeline.tarefa?.length ?? 0) / 4), 0)
+    console.log(chalk.cyan('\n⚡ dry-run\n'))
+    console.log(chalk.dim(`  Tokens originais:  ${result.originalTokens}`))
+    console.log(chalk.dim(`  Após compressão:   ${result.compressedTokens} (${result.method})`))
+    console.log(chalk.dim(`  Custo estimado:    $${cost.toFixed(4)}`))
+    if (result.text) {
+      console.log(chalk.dim(`\n  Contexto comprimido:\n`))
+      console.log(result.text.slice(0, 500) + (result.text.length > 500 ? '\n...' : ''))
+    }
+    return
   }
 
   // Confirm unless --yes or non-interactive
@@ -96,23 +142,13 @@ export async function runPipeline(opts = {}) {
     if (!confirmed) { console.log(chalk.dim('\n  Cancelado.\n')); return }
   }
 
-  await executePipeline(pipeline, { model: opts.model })
-}
-
-async function fetchUrl(url) {
   try {
-    console.log(chalk.dim(`  Fetching ${url} ...`))
-    const res = await fetch(url)
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const text = await res.text()
-    return text
-      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/\s{3,}/g, '\n\n')
-      .trim()
+    await execute(pipeline)
   } catch (err) {
-    console.error(chalk.red(`✗ Erro ao buscar URL: ${err.message}`))
-    process.exit(1)
+    if (err.userFacing) {
+      console.error(err.message)
+      process.exit(1)
+    }
+    throw err
   }
 }

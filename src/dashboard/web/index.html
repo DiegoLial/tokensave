@@ -2,140 +2,556 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tokensave Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>tokensave</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:system-ui,sans-serif;background:#0d1117;color:#c9d1d9;min-height:100vh;padding:24px}
-  h1{font-size:1.4rem;color:#58a6ff;margin-bottom:24px;letter-spacing:.05em}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
-  .card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:20px}
-  .card-label{font-size:.75rem;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-  .card-value{font-size:1.8rem;font-weight:700;color:#e6edf3}
-  .card-sub{font-size:.8rem;color:#3fb950;margin-top:4px}
-  h2{font-size:1rem;color:#8b949e;margin-bottom:12px;margin-top:32px;text-transform:uppercase;letter-spacing:.06em}
-  table{width:100%;border-collapse:collapse;font-size:.85rem}
-  th{text-align:left;color:#8b949e;padding:8px 12px;border-bottom:1px solid #21262d;font-weight:500}
-  td{padding:8px 12px;border-bottom:1px solid #161b22;color:#c9d1d9}
-  tr:hover td{background:#161b22}
-  .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:600}
-  .badge-green{background:#1a4a1a;color:#3fb950}
-  .badge-blue{background:#0d2d4a;color:#58a6ff}
-  .filters{display:flex;gap:12px;margin-bottom:16px;align-items:center}
-  .filters input,.filters select{background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:6px 10px;border-radius:6px;font-size:.85rem}
-  .btn{background:#21262d;border:1px solid #30363d;color:#c9d1d9;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
-  .btn:hover{background:#30363d}
-  .bar-wrap{background:#21262d;border-radius:4px;height:8px;overflow:hidden;margin-top:4px}
-  .bar{background:#3fb950;height:100%}
-  .chart-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:.82rem}
-  .chart-label{width:160px;color:#8b949e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .chart-bar-wrap{flex:1;background:#21262d;border-radius:4px;height:12px;overflow:hidden}
-  .chart-bar{background:#58a6ff;height:100%}
-  .chart-count{width:40px;text-align:right;color:#8b949e}
-  @media(max-width:600px){.cards{grid-template-columns:1fr 1fr}}
+  :root{
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;
+    --text:#e6edf3;--dim:#8b949e;--accent:#58a6ff;
+    --green:#3fb950;--red:#f85149;--yellow:#d29922;
+    --radius:6px;--font:'SF Mono','Fira Code',Consolas,monospace
+  }
+  body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;min-height:100vh}
+  a{color:var(--accent);text-decoration:none}
+
+  .header{display:flex;align-items:center;gap:12px;padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface)}
+  .header h1{font-size:15px;font-weight:600;letter-spacing:.5px}
+  .header .badge{background:var(--accent);color:#000;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:700}
+  .ws-dot{width:8px;height:8px;border-radius:50%;background:var(--red);transition:background .3s;margin-left:auto}
+  .ws-dot.connected{background:var(--green)}
+
+  .tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surface);padding:0 24px}
+  .tab{padding:10px 16px;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;font-size:12px;transition:all .15s}
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--text);border-bottom-color:var(--accent)}
+
+  .content{padding:24px;max-width:900px;margin:0 auto}
+
+  .field{margin-bottom:16px}
+  label{display:block;color:var(--dim);font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+  input,textarea,select{
+    width:100%;background:var(--surface);border:1px solid var(--border);
+    color:var(--text);padding:8px 12px;border-radius:var(--radius);
+    font-family:var(--font);font-size:13px;outline:none;transition:border .15s
+  }
+  input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+  textarea{resize:vertical;min-height:80px}
+  select option{background:var(--surface)}
+
+  .row{display:grid;gap:12px}
+  .row-2{grid-template-columns:1fr 1fr}
+  .row-3{grid-template-columns:1fr 1fr 1fr}
+
+  .btn{padding:8px 16px;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--font);font-size:12px;font-weight:600;transition:all .15s}
+  .btn-primary{background:var(--accent);color:#000}
+  .btn-primary:hover{opacity:.85}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn-ghost{background:transparent;color:var(--dim);border:1px solid var(--border)}
+  .btn-ghost:hover{color:var(--text);border-color:var(--dim)}
+  .btn-danger{background:transparent;color:var(--red);border:1px solid var(--border)}
+  .btn-danger:hover{border-color:var(--red)}
+
+  .output-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:16px;min-height:120px;display:none}
+  .output-panel.visible{display:block}
+  .output-text{white-space:pre-wrap;word-break:break-word;line-height:1.6;color:var(--text)}
+  .output-meta{display:flex;gap:16px;padding-top:12px;margin-top:12px;border-top:1px solid var(--border);color:var(--dim);font-size:11px}
+  .cursor{display:inline-block;width:8px;height:14px;background:var(--accent);animation:blink .8s step-end infinite;vertical-align:text-bottom}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;border-bottom:1px solid var(--border)}
+  td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text);font-size:12px}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  .tag{display:inline-block;background:rgba(88,166,255,.1);color:var(--accent);padding:2px 6px;border-radius:4px;font-size:10px}
+  .tag-green{background:rgba(63,185,80,.1);color:var(--green)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+  .card-title{font-size:12px;font-weight:600;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+  .card-meta{color:var(--dim);font-size:11px;line-height:1.8}
+
+  .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .stat-value{font-size:22px;font-weight:700;color:var(--text)}
+  .stat-label{color:var(--dim);font-size:11px;margin-top:4px}
+
+  .section-title{font-size:12px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin:24px 0 12px}
+  .key-input-wrap{position:relative}
+  .key-input-wrap input{padding-right:80px}
+  .toggle-key{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--accent);cursor:pointer;font-size:11px}
+
+  .msg{padding:8px 12px;border-radius:var(--radius);font-size:12px;margin-top:8px}
+  .msg-ok{background:rgba(63,185,80,.1);color:var(--green);border:1px solid rgba(63,185,80,.3)}
+  .msg-err{background:rgba(248,81,73,.1);color:var(--red);border:1px solid rgba(248,81,73,.3)}
+  .empty{text-align:center;padding:48px;color:var(--dim)}
+
+  .caveman-group{display:flex;gap:0}
+  .caveman-opt{padding:6px 14px;background:var(--surface);border:1px solid var(--border);cursor:pointer;font-size:12px;color:var(--dim);transition:all .15s}
+  .caveman-opt:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+  .caveman-opt:last-child{border-radius:0 var(--radius) var(--radius) 0}
+  .caveman-opt+.caveman-opt{border-left:none}
+  .caveman-opt.active{background:var(--accent);color:#000;border-color:var(--accent)}
+  .mode-desc{color:var(--dim);font-size:11px;margin-top:4px;min-height:16px}
 </style>
 </head>
 <body>
-<h1>⚡ TOKENSAVE</h1>
-<div class="cards" id="cards">
-  <div class="card"><div class="card-label">Total Pipelines</div><div class="card-value" id="total-runs">—</div></div>
-  <div class="card"><div class="card-label">Tokens economizados</div><div class="card-value" id="tokens-saved">—</div><div class="card-sub" id="tokens-pct"></div></div>
-  <div class="card"><div class="card-label">Custo total</div><div class="card-value" id="total-cost">—</div></div>
-  <div class="card"><div class="card-label">Hoje — pipelines</div><div class="card-value" id="today-runs">—</div><div class="card-sub" id="today-cost"></div></div>
+
+<div class="header">
+  <span style="color:var(--accent);font-size:18px">&#9889;</span>
+  <h1>tokensave</h1>
+  <span class="badge">v3</span>
+  <span class="ws-dot" id="wsDot" title="WebSocket"></span>
 </div>
 
-<h2>Uso por modo</h2>
-<div id="mode-chart"></div>
-
-<h2>Histórico de execuções</h2>
-<div class="filters">
-  <input id="filter-text" type="text" placeholder="Filtrar tarefa ou modo..." oninput="renderTable()">
-  <select id="filter-modo" onchange="renderTable()"><option value="">Todos os modos</option></select>
-  <button class="btn" onclick="exportCSV()">⬇ Exportar CSV</button>
-  <button class="btn" onclick="load()">↺ Atualizar</button>
+<div class="tabs">
+  <div class="tab active" data-tab="run">Run</div>
+  <div class="tab" data-tab="history">History</div>
+  <div class="tab" data-tab="templates">Templates</div>
+  <div class="tab" data-tab="settings">Settings</div>
 </div>
-<table>
-  <thead><tr>
-    <th>Data/Hora</th><th>Papel</th><th>Tarefa</th><th>Modo</th>
-    <th>Compressão</th><th>Custo</th><th>Tempo</th><th>Modelo</th>
-  </tr></thead>
-  <tbody id="runs-body"></tbody>
-</table>
+
+<!-- RUN -->
+<div class="content" id="tab-run">
+  <div class="row row-2">
+    <div class="field">
+      <label>Papel / Role</label>
+      <input id="r-papel" placeholder="Senior Engineer, Security Auditor...">
+    </div>
+    <div class="field">
+      <label>Modelo</label>
+      <select id="r-model">
+        <optgroup label="Anthropic">
+          <option value="claude-opus-4-7">claude-opus-4-7</option>
+          <option value="claude-sonnet-4-6" selected>claude-sonnet-4-6</option>
+          <option value="claude-haiku-4-5">claude-haiku-4-5</option>
+        </optgroup>
+        <optgroup label="OpenAI">
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+        </optgroup>
+        <optgroup label="Google">
+          <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+          <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+        </optgroup>
+        <optgroup label="Local">
+          <option value="ollama/llama3">ollama/llama3</option>
+          <option value="ollama/codellama">ollama/codellama</option>
+          <option value="ollama/mistral">ollama/mistral</option>
+        </optgroup>
+      </select>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Tarefa</label>
+    <input id="r-tarefa" placeholder="Revisar endpoint para vulnerabilidades OWASP...">
+  </div>
+
+  <div class="field">
+    <label>Contexto (opcional)</label>
+    <textarea id="r-context" placeholder="Cole codigo, texto ou deixe vazio..."></textarea>
+  </div>
+
+  <div class="row row-2">
+    <div class="field">
+      <label>Modo</label>
+      <select id="r-mode"></select>
+      <div class="mode-desc" id="r-mode-desc"></div>
+    </div>
+    <div class="field">
+      <label>Condicao de saida (opcional)</label>
+      <input id="r-condicao" placeholder="Todos os issues criticos identificados...">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Caveman level</label>
+    <div class="caveman-group" id="cavemanGroup">
+      <div class="caveman-opt" data-level="lite">lite</div>
+      <div class="caveman-opt active" data-level="full">full</div>
+      <div class="caveman-opt" data-level="ultra">ultra</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button class="btn btn-primary" id="runBtn">&#9654; Run</button>
+    <button class="btn btn-ghost" id="cancelBtn" style="display:none">&#10005; Cancelar</button>
+    <button class="btn btn-ghost" id="saveTemplateBtn">Salvar template</button>
+  </div>
+
+  <div class="output-panel" id="outputPanel">
+    <div class="output-text" id="outputText"></div>
+    <div class="output-meta" id="outputMeta"></div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="content" id="tab-history" style="display:none">
+  <div class="stats-strip" id="statsStrip"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Data</th><th>Papel</th><th>Tarefa</th><th>Modo</th><th>Modelo</th>
+        <th>Tokens salvos</th><th>Custo</th><th>Duracao</th>
+      </tr></thead>
+      <tbody id="historyBody"></tbody>
+    </table>
+  </div>
+  <div style="margin-top:12px">
+    <a href="/api/runs/export.csv" class="btn btn-ghost" style="display:inline-block;padding:6px 12px">Export CSV</a>
+  </div>
+</div>
+
+<!-- TEMPLATES -->
+<div class="content" id="tab-templates" style="display:none">
+  <div id="templatesList"></div>
+  <div class="card" style="margin-top:24px">
+    <div class="card-title">Novo template</div>
+    <div class="field"><label>Nome</label><input id="tpl-name" placeholder="security-weekly"></div>
+    <div class="row row-2">
+      <div class="field"><label>Papel</label><input id="tpl-papel"></div>
+      <div class="field"><label>Modo</label><select id="tpl-mode"></select></div>
+    </div>
+    <div class="field"><label>Condicao</label><input id="tpl-condicao"></div>
+    <button class="btn btn-primary" id="saveTplBtn" style="margin-top:4px">Salvar</button>
+    <div id="tplMsg"></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="content" id="tab-settings" style="display:none">
+  <div class="section-title">API Keys</div>
+  <div class="field">
+    <label>Anthropic API Key</label>
+    <div class="key-input-wrap">
+      <input type="password" id="s-anthropic" placeholder="sk-ant-...">
+      <span class="toggle-key" onclick="toggleKey('s-anthropic')">mostrar</span>
+    </div>
+  </div>
+  <div class="field">
+    <label>OpenAI API Key</label>
+    <div class="key-input-wrap">
+      <input type="password" id="s-openai" placeholder="sk-...">
+      <span class="toggle-key" onclick="toggleKey('s-openai')">mostrar</span>
+    </div>
+  </div>
+  <div class="field">
+    <label>Google API Key</label>
+    <div class="key-input-wrap">
+      <input type="password" id="s-google" placeholder="AIza...">
+      <span class="toggle-key" onclick="toggleKey('s-google')">mostrar</span>
+    </div>
+  </div>
+
+  <div class="section-title">Padroes Globais</div>
+  <div class="row row-3">
+    <div class="field"><label>Modelo padrao</label><select id="s-model"></select></div>
+    <div class="field">
+      <label>Caveman padrao</label>
+      <select id="s-caveman">
+        <option value="lite">lite</option>
+        <option value="full" selected>full</option>
+        <option value="ultra">ultra</option>
+      </select>
+    </div>
+    <div class="field"><label>Papel padrao</label><input id="s-papel"></div>
+  </div>
+  <div class="field">
+    <label>Ollama Base URL</label>
+    <input id="s-ollama" placeholder="http://localhost:11434/v1">
+  </div>
+
+  <div class="section-title">Config por Projeto</div>
+  <div class="card" id="projectConfig">
+    <div class="card-meta" id="projectRoot" style="margin-bottom:12px"></div>
+    <div class="row row-2">
+      <div class="field"><label>Modelo</label><select id="p-model"><option value="">-- global --</option></select></div>
+      <div class="field"><label>Caveman</label>
+        <select id="p-caveman">
+          <option value="">-- global --</option>
+          <option value="lite">lite</option>
+          <option value="full">full</option>
+          <option value="ultra">ultra</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Papel padrao</label><input id="p-papel" placeholder="-- global --"></div>
+    <button class="btn btn-ghost" id="saveProjBtn" style="margin-top:4px">Salvar config do projeto</button>
+  </div>
+
+  <button class="btn btn-primary" id="saveSettingsBtn" style="margin-top:8px">Salvar configuracoes globais</button>
+  <div id="settingsMsg"></div>
+</div>
 
 <script>
-let allRuns = []
+let ws, wsConnected = false
+let currentJobId = null
+let modes = [], cavemanLevel = 'full'
 
-function fmt(n){ return Number(n||0).toLocaleString('pt-BR') }
-function fmtCost(v){ return '$'+(Number(v||0).toFixed(4)) }
-function fmtPct(orig,comp){
-  if(!orig||orig===0) return '—'
-  return Math.round((1-comp/orig)*100)+'%'
-}
-function fmtDur(ms){ return (ms/1000).toFixed(1)+'s' }
-function shortModel(m){ return (m||'').replace('claude-sonnet-4-6','sonnet-4.6').replace('claude-haiku-4-5','haiku-4.5').slice(0,14) }
-
-async function load(){
-  const [sumRes, runsRes] = await Promise.all([
-    fetch('/api/summary').then(r=>r.json()),
-    fetch('/api/runs?limit=200').then(r=>r.json())
-  ])
-
-  const {total,today,modes} = sumRes
-  const saved = total.total_tokens_original - total.total_tokens_compressed
-  const pct = total.total_tokens_original > 0
-    ? Math.round(saved/total.total_tokens_original*100) : 0
-
-  document.getElementById('total-runs').textContent = fmt(total.total_runs)
-  document.getElementById('tokens-saved').textContent = fmt(saved)
-  document.getElementById('tokens-pct').textContent = pct ? `-${pct}%` : ''
-  document.getElementById('total-cost').textContent = fmtCost(total.total_cost_usd)
-  document.getElementById('today-runs').textContent = fmt(today.runs_today)
-  document.getElementById('today-cost').textContent = fmtCost(today.cost_today)+' hoje'
-
-  const maxCount = modes[0]?.count ?? 1
-  document.getElementById('mode-chart').innerHTML = modes.map(m=>`
-    <div class="chart-row">
-      <div class="chart-label">${m.modo}</div>
-      <div class="chart-bar-wrap"><div class="chart-bar" style="width:${Math.round(m.count/maxCount*100)}%"></div></div>
-      <div class="chart-count">${m.count}</div>
-    </div>
-  `).join('')
-
-  allRuns = runsRes
-
-  const modoSel = document.getElementById('filter-modo')
-  const existing = [...modoSel.options].map(o=>o.value)
-  modes.forEach(m=>{ if(!existing.includes(m.modo)){ const o=document.createElement('option'); o.value=m.modo; o.textContent=m.modo; modoSel.appendChild(o) } })
-
-  renderTable()
+function connectWS() {
+  const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
+  ws = new WebSocket(protocol + '//' + location.host + '/ws')
+  ws.onopen  = () => { wsConnected = true;  document.getElementById('wsDot').classList.add('connected') }
+  ws.onclose = () => { wsConnected = false; document.getElementById('wsDot').classList.remove('connected'); setTimeout(connectWS, 3000) }
+  ws.onmessage = (e) => { try { handleWsMessage(JSON.parse(e.data)) } catch {} }
 }
 
-function renderTable(){
-  const text = document.getElementById('filter-text').value.toLowerCase()
-  const modo = document.getElementById('filter-modo').value
-  const filtered = allRuns.filter(r=>
-    (!text || r.tarefa?.toLowerCase().includes(text) || r.modo?.includes(text)) &&
-    (!modo || r.modo === modo)
-  )
+function handleWsMessage(msg) {
+  if (msg.job_id && msg.job_id !== currentJobId) return
 
-  document.getElementById('runs-body').innerHTML = filtered.map(r=>`
-    <tr>
-      <td>${r.created_at?.slice(0,16)??'—'}</td>
-      <td>${r.papel||'—'}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.tarefa||''}">${r.tarefa||'—'}</td>
-      <td><span class="badge badge-blue">${r.modo||'—'}</span></td>
-      <td><span class="badge badge-green">-${fmtPct(r.tokens_original,r.tokens_compressed)}</span></td>
-      <td>${fmtCost(r.cost_usd)}</td>
-      <td>${fmtDur(r.duration_ms)}</td>
-      <td>${shortModel(r.model)}</td>
-    </tr>
-  `).join('') || '<tr><td colspan="8" style="text-align:center;color:#8b949e;padding:24px">Nenhuma execução</td></tr>'
+  if (msg.type === 'start') {
+    document.getElementById('outputPanel').classList.add('visible')
+    document.getElementById('outputText').innerHTML = '<span class="cursor"></span>'
+    document.getElementById('outputMeta').innerHTML = ''
+    document.getElementById('cancelBtn').style.display = 'inline-block'
+  }
+  if (msg.type === 'chunk') {
+    const el = document.getElementById('outputText')
+    const cursor = el.querySelector('.cursor')
+    const text = document.createTextNode(msg.text)
+    cursor ? el.insertBefore(text, cursor) : el.appendChild(text)
+  }
+  if (msg.type === 'done') {
+    document.getElementById('outputText').querySelector('.cursor')?.remove()
+    document.getElementById('cancelBtn').style.display = 'none'
+    document.getElementById('runBtn').disabled = false
+    currentJobId = null
+    if (msg.metrics) {
+      const m = msg.metrics
+      const saved = m.tokens_original > 0 ? Math.round((1 - m.tokens_compressed/m.tokens_original)*100) : 0
+      document.getElementById('outputMeta').innerHTML =
+        '<span>&#10003; ' + m.tokens_compressed + '/' + m.tokens_original + ' tokens (' + saved + '% salvo)</span>' +
+        '<span>$' + (m.cost_usd||0).toFixed(4) + '</span>' +
+        '<span>' + ((m.duration_ms||0)/1000).toFixed(1) + 's</span>'
+    }
+    loadHistory()
+  }
+  if (msg.type === 'error') {
+    document.getElementById('outputText').querySelector('.cursor')?.remove()
+    const errEl = document.createElement('span')
+    errEl.style.color = 'var(--red)'
+    errEl.textContent = '\n&#10007; ' + msg.message
+    document.getElementById('outputText').appendChild(errEl)
+    document.getElementById('cancelBtn').style.display = 'none'
+    document.getElementById('runBtn').disabled = false
+    currentJobId = null
+  }
 }
 
-function exportCSV(){ window.location = '/api/runs/export.csv' }
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'))
+    t.classList.add('active')
+    document.querySelectorAll('.content').forEach(x => x.style.display = 'none')
+    document.getElementById('tab-' + t.dataset.tab).style.display = 'block'
+    if (t.dataset.tab === 'history')   loadHistory()
+    if (t.dataset.tab === 'templates') loadTemplates()
+    if (t.dataset.tab === 'settings')  loadSettings()
+  })
+})
 
-load()
-setInterval(load, 30000)
+document.querySelectorAll('.caveman-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.caveman-opt').forEach(o => o.classList.remove('active'))
+    opt.classList.add('active')
+    cavemanLevel = opt.dataset.level
+  })
+})
+
+async function loadModes() {
+  const res = await fetch('/api/modes')
+  modes = await res.json()
+  populateModeSelect('r-mode', modes)
+  populateModeSelect('tpl-mode', modes)
+  updateModeDesc()
+}
+
+function populateModeSelect(id, modeList) {
+  const sel = document.getElementById(id)
+  if (!sel) return
+  sel.innerHTML = modeList.map(m => '<option value="' + m.id + '">' + m.name + '</option>').join('')
+}
+
+function updateModeDesc() {
+  const sel = document.getElementById('r-mode')
+  if (!sel) return
+  const mode = modes.find(m => m.id === sel.value)
+  document.getElementById('r-mode-desc').textContent = mode ? (mode.description || '') : ''
+}
+
+document.getElementById('r-mode').addEventListener('change', updateModeDesc)
+
+function populateModelSelects() {
+  const list = ['claude-opus-4-7','claude-sonnet-4-6','claude-haiku-4-5','gpt-4o','gpt-4o-mini','gemini-1.5-pro','gemini-1.5-flash','ollama/llama3']
+  const opts = list.map(m => '<option value="' + m + '">' + m + '</option>').join('')
+  document.getElementById('s-model').innerHTML = opts
+  document.getElementById('p-model').innerHTML = '<option value="">-- global --</option>' + opts
+}
+
+document.getElementById('runBtn').addEventListener('click', async () => {
+  const pipeline = {
+    papel:     document.getElementById('r-papel').value.trim(),
+    tarefa:    document.getElementById('r-tarefa').value.trim(),
+    contexto:  document.getElementById('r-context').value,
+    modo:      document.getElementById('r-mode').value,
+    condicao:  document.getElementById('r-condicao').value.trim(),
+    model:     document.getElementById('r-model').value,
+    cavemanLevel,
+  }
+  if (!pipeline.papel || !pipeline.tarefa) { alert('Papel e Tarefa sao obrigatorios.'); return }
+  document.getElementById('runBtn').disabled = true
+  document.getElementById('outputPanel').classList.add('visible')
+  document.getElementById('outputText').innerHTML = '<span class="cursor"></span>'
+  document.getElementById('outputMeta').textContent = ''
+  try {
+    const res  = await fetch('/api/run', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(pipeline) })
+    const data = await res.json()
+    if (data.error) {
+      document.getElementById('outputText').textContent = '&#10007; ' + data.error
+      document.getElementById('runBtn').disabled = false
+      return
+    }
+    currentJobId = data.job_id
+  } catch {
+    document.getElementById('outputText').textContent = '&#10007; Erro de conexao com o servidor.'
+    document.getElementById('runBtn').disabled = false
+  }
+})
+
+document.getElementById('cancelBtn').addEventListener('click', () => {
+  if (currentJobId && ws && ws.readyState === 1) ws.send(JSON.stringify({ type:'cancel', job_id:currentJobId }))
+  document.getElementById('cancelBtn').style.display = 'none'
+  document.getElementById('runBtn').disabled = false
+  document.getElementById('outputText').querySelector('.cursor')?.remove()
+  currentJobId = null
+})
+
+document.getElementById('saveTemplateBtn').addEventListener('click', () => {
+  const name = prompt('Nome do template:')
+  if (!name) return
+  fetch('/api/templates', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, papel:document.getElementById('r-papel').value, modo:document.getElementById('r-mode').value, condicao:document.getElementById('r-condicao').value }) }).then(() => alert('Template salvo!'))
+})
+
+async function loadHistory() {
+  const [runsRes, summaryRes] = await Promise.all([fetch('/api/runs?limit=50'), fetch('/api/summary')])
+  const runs = await runsRes.json()
+  const { total, today } = await summaryRes.json()
+  const savedPct = (total.total_tokens_original || 0) > 0
+    ? Math.round((1 - total.total_tokens_compressed / total.total_tokens_original) * 100) : 0
+  document.getElementById('statsStrip').innerHTML =
+    '<div class="stat-card"><div class="stat-value">' + (total.total_runs || 0) + '</div><div class="stat-label">Total runs</div></div>' +
+    '<div class="stat-card"><div class="stat-value">$' + (total.total_cost_usd || 0).toFixed(4) + '</div><div class="stat-label">Custo total</div></div>' +
+    '<div class="stat-card"><div class="stat-value" style="color:var(--green)">' + savedPct + '%</div><div class="stat-label">Tokens salvos</div></div>' +
+    '<div class="stat-card"><div class="stat-value">' + (today.runs_today || 0) + '</div><div class="stat-label">Hoje</div></div>'
+  if (!runs.length) { document.getElementById('historyBody').innerHTML = '<tr><td colspan="8" class="empty">Nenhuma execucao ainda.</td></tr>'; return }
+  document.getElementById('historyBody').innerHTML = runs.map(r => {
+    const saved = (r.tokens_original || 0) > 0 ? Math.round((1 - r.tokens_compressed/r.tokens_original)*100) : 0
+    const raw = r.created_at || ''
+    const date = raw ? new Date(raw + (raw.includes('Z') || raw.includes('+') ? '' : 'Z')).toLocaleString('pt-BR', { dateStyle:'short', timeStyle:'short' }) : ''
+    return '<tr><td>' + date + '</td><td>' + (r.papel||'') + '</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (r.tarefa||'') + '</td><td><span class="tag">' + (r.modo||'') + '</span></td><td><span class="tag">' + (r.model||'') + '</span></td><td><span class="tag tag-green">' + saved + '%</span></td><td>$' + (r.cost_usd||0).toFixed(4) + '</td><td>' + ((r.duration_ms||0)/1000).toFixed(1) + 's</td></tr>'
+  }).join('')
+}
+
+async function loadTemplates() {
+  const res = await fetch('/api/templates')
+  const list = await res.json()
+  const el = document.getElementById('templatesList')
+  if (!list.length) { el.innerHTML = '<div class="empty">Nenhum template ainda.</div>'; return }
+  el.innerHTML = list.map(t => {
+    const name = t.name || t
+    return '<div class="card"><div class="card-title">' + name + '<div style="display:flex;gap:8px"><button class="btn btn-ghost" onclick="useTemplate(\'' + name + '\')">Usar</button><button class="btn btn-danger" onclick="removeTemplate(\'' + name + '\')">Remover</button></div></div><div class="card-meta">' + (t.papel ? '<div>Papel: ' + t.papel + '</div>' : '') + (t.modo ? '<div>Modo: ' + t.modo + '</div>' : '') + (t.condicao ? '<div>Condicao: ' + t.condicao + '</div>' : '') + '</div></div>'
+  }).join('')
+}
+
+function useTemplate(name) {
+  fetch('/api/templates').then(r => r.json()).then(list => {
+    const tpl = list.find(t => (t.name || t) === name)
+    if (!tpl) return
+    if (tpl.papel)    document.getElementById('r-papel').value = tpl.papel
+    if (tpl.modo)     document.getElementById('r-mode').value  = tpl.modo
+    if (tpl.condicao) document.getElementById('r-condicao').value = tpl.condicao
+    document.querySelectorAll('.tab')[0].click()
+    updateModeDesc()
+  })
+}
+
+function removeTemplate(name) {
+  if (!confirm('Remover template "' + name + '"?')) return
+  fetch('/api/templates/' + encodeURIComponent(name), { method:'DELETE' }).then(() => loadTemplates())
+}
+
+document.getElementById('saveTplBtn').addEventListener('click', async () => {
+  const name = document.getElementById('tpl-name').value.trim()
+  if (!name) { showMsg('tplMsg', 'Nome obrigatorio', false); return }
+  await fetch('/api/templates', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ name, papel:document.getElementById('tpl-papel').value, modo:document.getElementById('tpl-mode').value, condicao:document.getElementById('tpl-condicao').value }) })
+  showMsg('tplMsg', 'Template salvo!', true)
+  loadTemplates()
+})
+
+async function loadSettings() {
+  const [cfgRes, projRes] = await Promise.all([fetch('/api/config'), fetch('/api/config/project')])
+  const cfg = await cfgRes.json()
+  const proj = await projRes.json()
+  document.getElementById('s-anthropic').placeholder = cfg.has_anthropic ? '(configurada)' : 'sk-ant-...'
+  document.getElementById('s-openai').placeholder    = cfg.has_openai    ? '(configurada)' : 'sk-...'
+  document.getElementById('s-google').placeholder    = cfg.has_google    ? '(configurada)' : 'AIza...'
+  document.getElementById('s-model').value   = cfg.default_model    || 'claude-sonnet-4-6'
+  document.getElementById('s-caveman').value = cfg.default_caveman  || 'full'
+  document.getElementById('s-papel').value   = cfg.default_papel    || ''
+  document.getElementById('s-ollama').value  = cfg.ollama_base_url  || ''
+  document.getElementById('projectRoot').textContent = 'Projeto: ' + (proj.root || '')
+  if (proj.config && proj.config.default_model)   document.getElementById('p-model').value   = proj.config.default_model
+  if (proj.config && proj.config.default_caveman) document.getElementById('p-caveman').value = proj.config.default_caveman
+  if (proj.config && proj.config.default_papel)   document.getElementById('p-papel').value   = proj.config.default_papel
+}
+
+document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+  const body = {}
+  const a = document.getElementById('s-anthropic').value
+  const o = document.getElementById('s-openai').value
+  const g = document.getElementById('s-google').value
+  if (a) body.anthropic_api_key = a
+  if (o) body.openai_api_key    = o
+  if (g) body.google_api_key    = g
+  body.default_model   = document.getElementById('s-model').value
+  body.default_caveman = document.getElementById('s-caveman').value
+  body.default_papel   = document.getElementById('s-papel').value
+  body.ollama_base_url = document.getElementById('s-ollama').value
+  const res = await fetch('/api/config', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) })
+  showMsg('settingsMsg', res.ok ? 'Salvo!' : 'Erro ao salvar', res.ok)
+  if (res.ok) loadSettings()
+})
+
+document.getElementById('saveProjBtn').addEventListener('click', async () => {
+  const body = {}
+  const m = document.getElementById('p-model').value
+  const c = document.getElementById('p-caveman').value
+  const p = document.getElementById('p-papel').value
+  if (m) body.default_model   = m
+  if (c) body.default_caveman = c
+  if (p) body.default_papel   = p
+  const res = await fetch('/api/config/project', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) })
+  showMsg('settingsMsg', res.ok ? 'Config do projeto salva!' : 'Erro', res.ok)
+})
+
+function toggleKey(id) {
+  const input = document.getElementById(id)
+  const span = input.parentElement.querySelector('.toggle-key')
+  input.type = input.type === 'password' ? 'text' : 'password'
+  span.textContent = input.type === 'password' ? 'mostrar' : 'ocultar'
+}
+
+function showMsg(id, text, ok) {
+  const el = document.getElementById(id)
+  el.className = 'msg ' + (ok ? 'msg-ok' : 'msg-err')
+  el.textContent = text
+  setTimeout(() => { el.textContent = '' }, 3000)
+}
+
+connectWS()
+loadModes()
+populateModelSelects()
 </script>
 </body>
 </html>
