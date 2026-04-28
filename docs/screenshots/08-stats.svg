@@ -15,25 +15,25 @@
   <circle cx="40" cy="18" r="6" fill="#febc2e"/>
   <circle cx="60" cy="18" r="6" fill="#28c840"/>
   <!-- title -->
-  <text x="390" y="23" text-anchor="middle" font-size="12" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace fill="#6e7681">tokensave stats</text>
+  <text x="390" y="23" text-anchor="middle" font-size="12" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace" fill="#6e7681">tokensave stats</text>
   <!-- content -->
-  <text x="24" y="52" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave stats</tspan></text>
-  <text x="24" y="72" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="92" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave Stats</tspan></text>
-  <text x="24" y="112" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="132" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Total de pipelines:   </tspan><tspan fill="#e6edf3" font-weight="700">87</tspan></text>
-  <text x="24" y="152" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Tokens economizados:  </tspan><tspan fill="#3fb950">341.200</tspan><tspan fill="#6e7681"> (</tspan><tspan fill="#3fb950">-69%</tspan><tspan fill="#6e7681">)</tspan></text>
-  <text x="24" y="172" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Custo total:          </tspan><tspan fill="#79c0ff">$1.3240</tspan></text>
-  <text x="24" y="192" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Hoje (pipelines):     </tspan><tspan fill="#e6edf3" font-weight="700">12</tspan></text>
-  <text x="24" y="212" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Hoje (custo):         </tspan><tspan fill="#79c0ff">$0.1820</tspan></text>
-  <text x="24" y="232" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="252" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Modos mais usados:</tspan></text>
-  <text x="24" y="272" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    revisar-codigo          34 runs</tspan></text>
-  <text x="24" y="292" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    pitfalls                18 runs</tspan></text>
-  <text x="24" y="312" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    swot                    12 runs</tspan></text>
-  <text x="24" y="332" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="352" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Por projeto:</tspan></text>
-  <text x="24" y="372" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    tokensave               41 runs  -71%  $0.62</tspan></text>
-  <text x="24" y="392" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    meu-saas                28 runs  -68%  $0.47</tspan></text>
-  <text x="24" y="412" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    api-service             18 runs  -65%  $0.23</tspan></text>
+  <text x="24" y="52" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave stats</tspan></text>
+  <text x="24" y="72" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="92" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave Stats</tspan></text>
+  <text x="24" y="112" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="132" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Total de pipelines:   </tspan><tspan fill="#e6edf3" font-weight="700">87</tspan></text>
+  <text x="24" y="152" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Tokens economizados:  </tspan><tspan fill="#3fb950">341.200</tspan><tspan fill="#6e7681"> (</tspan><tspan fill="#3fb950">-69%</tspan><tspan fill="#6e7681">)</tspan></text>
+  <text x="24" y="172" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Custo total:          </tspan><tspan fill="#79c0ff">$1.3240</tspan></text>
+  <text x="24" y="192" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Hoje (pipelines):     </tspan><tspan fill="#e6edf3" font-weight="700">12</tspan></text>
+  <text x="24" y="212" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Hoje (custo):         </tspan><tspan fill="#79c0ff">$0.1820</tspan></text>
+  <text x="24" y="232" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="252" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Modos mais usados:</tspan></text>
+  <text x="24" y="272" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    revisar-codigo          34 runs</tspan></text>
+  <text x="24" y="292" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    pitfalls                18 runs</tspan></text>
+  <text x="24" y="312" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    swot                    12 runs</tspan></text>
+  <text x="24" y="332" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="352" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Por projeto:</tspan></text>
+  <text x="24" y="372" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    tokensave               41 runs  -71%  $0.62</tspan></text>
+  <text x="24" y="392" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    meu-saas                28 runs  -68%  $0.47</tspan></text>
+  <text x="24" y="412" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    api-service             18 runs  -65%  $0.23</tspan></text>
 </svg>

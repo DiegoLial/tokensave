@@ -1,6 +1,6 @@
 {
   "name": "tokensave",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Structured AI pipeline for any tool. One command. 70% less tokens.",
   "type": "module",
   "bin": {

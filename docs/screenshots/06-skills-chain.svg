@@ -15,26 +15,26 @@
   <circle cx="40" cy="18" r="6" fill="#febc2e"/>
   <circle cx="60" cy="18" r="6" fill="#28c840"/>
   <!-- title -->
-  <text x="390" y="23" text-anchor="middle" font-size="12" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace fill="#6e7681">tokensave skills — Security Audit (chain)</text>
+  <text x="390" y="23" text-anchor="middle" font-size="12" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace" fill="#6e7681">tokensave skills — Security Audit (chain)</text>
   <!-- content -->
-  <text x="24" y="52" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave skills</tspan></text>
-  <text x="24" y="72" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="92" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave Skills — Bundles por Domínio</tspan></text>
-  <text x="24" y="112" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="132" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Escolha um bundle: </tspan><tspan fill="#79c0ff">Security Audit</tspan></text>
-  <text x="24" y="152" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="172" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Papel: Security Auditor</tspan></text>
-  <text x="24" y="192" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Modos: revisar-codigo → pitfalls → multi-perspectiva</tspan></text>
-  <text x="24" y="212" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Encadeamento: 3 etapas</tspan></text>
-  <text x="24" y="232" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="252" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">O que fazer? </tspan><tspan fill="#79c0ff">Executar encadeado (3 modos em sequência)</tspan></text>
-  <text x="24" y="272" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="292" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#79c0ff">  1/3 — Revisão de código (bugs e segurança)</tspan></text>
-  <text x="24" y="312" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  ▶ Executando revisar-codigo...</tspan></text>
-  <text x="24" y="332" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">  ✓ Etapa 1 concluída. Output salvo para próxima etapa.</tspan></text>
-  <text x="24" y="352" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="372" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Continuar para próxima etapa? </tspan><tspan fill="#79c0ff">Yes</tspan></text>
-  <text x="24" y="392" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="412" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#79c0ff">  2/3 — Pitfalls (o que pode ser explorado)</tspan></text>
-  <text x="24" y="432" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  ▶ Executando pitfalls com contexto da etapa anterior...</tspan></text>
+  <text x="24" y="52" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave skills</tspan></text>
+  <text x="24" y="72" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="92" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave Skills — Bundles por Domínio</tspan></text>
+  <text x="24" y="112" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="132" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Escolha um bundle: </tspan><tspan fill="#79c0ff">Security Audit</tspan></text>
+  <text x="24" y="152" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="172" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Papel: Security Auditor</tspan></text>
+  <text x="24" y="192" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Modos: revisar-codigo → pitfalls → multi-perspectiva</tspan></text>
+  <text x="24" y="212" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Encadeamento: 3 etapas</tspan></text>
+  <text x="24" y="232" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="252" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">O que fazer? </tspan><tspan fill="#79c0ff">Executar encadeado (3 modos em sequência)</tspan></text>
+  <text x="24" y="272" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="292" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#79c0ff">  1/3 — Revisão de código (bugs e segurança)</tspan></text>
+  <text x="24" y="312" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  ▶ Executando revisar-codigo...</tspan></text>
+  <text x="24" y="332" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">  ✓ Etapa 1 concluída. Output salvo para próxima etapa.</tspan></text>
+  <text x="24" y="352" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="372" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Continuar para próxima etapa? </tspan><tspan fill="#79c0ff">Yes</tspan></text>
+  <text x="24" y="392" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="412" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#79c0ff">  2/3 — Pitfalls (o que pode ser explorado)</tspan></text>
+  <text x="24" y="432" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  ▶ Executando pitfalls com contexto da etapa anterior...</tspan></text>
 </svg>

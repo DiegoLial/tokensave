@@ -15,23 +15,23 @@
   <circle cx="40" cy="18" r="6" fill="#febc2e"/>
   <circle cx="60" cy="18" r="6" fill="#28c840"/>
   <!-- title -->
-  <text x="390" y="23" text-anchor="middle" font-size="12" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace fill="#6e7681">tokensave run --model ollama/llama3 (local, free)</text>
+  <text x="390" y="23" text-anchor="middle" font-size="12" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace" fill="#6e7681">tokensave run --model ollama/llama3 (local, free)</text>
   <!-- content -->
-  <text x="24" y="52" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave run \</tspan></text>
-  <text x="24" y="72" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--papel "Tech Lead" \</tspan></text>
-  <text x="24" y="92" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--tarefa "Revisar este código" \</tspan></text>
-  <text x="24" y="112" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--model ollama/llama3 --yes</tspan></text>
-  <text x="24" y="132" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="152" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave — Pipeline</tspan></text>
-  <text x="24" y="172" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="192" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Papel:    </tspan><tspan fill="#79c0ff">Tech Lead</tspan></text>
-  <text x="24" y="212" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Tarefa:   </tspan><tspan fill="#79c0ff">Revisar este código</tspan></text>
-  <text x="24" y="232" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Modo:     </tspan><tspan fill="#79c0ff">revisar-codigo</tspan></text>
-  <text x="24" y="252" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="272" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
-  <text x="24" y="292" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Custo estimado:      </tspan><tspan fill="#3fb950">local (sem custo)</tspan></text>
-  <text x="24" y="312" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Modelo:              </tspan><tspan fill="#79c0ff">llama3</tspan><tspan fill="#6e7681"> via Ollama localhost:11434</tspan></text>
-  <text x="24" y="332" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
-  <text x="24" y="352" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="372" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">▶ </tspan><tspan fill="#e6edf3" font-weight="700">…resposta em streaming (sem API key)…</tspan></text>
+  <text x="24" y="52" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave run \</tspan></text>
+  <text x="24" y="72" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--papel "Tech Lead" \</tspan></text>
+  <text x="24" y="92" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--tarefa "Revisar este código" \</tspan></text>
+  <text x="24" y="112" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--model ollama/llama3 --yes</tspan></text>
+  <text x="24" y="132" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="152" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave — Pipeline</tspan></text>
+  <text x="24" y="172" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="192" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Papel:    </tspan><tspan fill="#79c0ff">Tech Lead</tspan></text>
+  <text x="24" y="212" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Tarefa:   </tspan><tspan fill="#79c0ff">Revisar este código</tspan></text>
+  <text x="24" y="232" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Modo:     </tspan><tspan fill="#79c0ff">revisar-codigo</tspan></text>
+  <text x="24" y="252" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="272" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
+  <text x="24" y="292" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Custo estimado:      </tspan><tspan fill="#3fb950">local (sem custo)</tspan></text>
+  <text x="24" y="312" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Modelo:              </tspan><tspan fill="#79c0ff">llama3</tspan><tspan fill="#6e7681"> via Ollama localhost:11434</tspan></text>
+  <text x="24" y="332" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
+  <text x="24" y="352" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="372" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">▶ </tspan><tspan fill="#e6edf3" font-weight="700">…resposta em streaming (sem API key)…</tspan></text>
 </svg>

@@ -44,7 +44,7 @@ function svg(title, lines, { width = 780, prompt = '$ ' } = {}) {
     const content = typeof l === 'string'
       ? `<tspan fill="${FG}">${esc(l)}</tspan>`
       : line(l)
-    return `<text x="${padX}" y="${y}" font-size="13" font-family=${FONT}>${content}</text>`
+    return `<text x="${padX}" y="${y}" font-size="13" font-family="${FONT}">${content}</text>`
   }).join('\n  ')
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
@@ -64,7 +64,7 @@ function svg(title, lines, { width = 780, prompt = '$ ' } = {}) {
   <circle cx="40" cy="18" r="6" fill="#febc2e"/>
   <circle cx="60" cy="18" r="6" fill="#28c840"/>
   <!-- title -->
-  <text x="${width/2}" y="23" text-anchor="middle" font-size="12" font-family=${FONT} fill="${DIM}">${esc(title)}</text>
+  <text x="${width/2}" y="23" text-anchor="middle" font-size="12" font-family="${FONT}" fill="${DIM}">${esc(title)}</text>
   <!-- content -->
   ${tspans}
 </svg>`

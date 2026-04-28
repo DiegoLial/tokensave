@@ -15,25 +15,25 @@
   <circle cx="40" cy="18" r="6" fill="#febc2e"/>
   <circle cx="60" cy="18" r="6" fill="#28c840"/>
   <!-- title -->
-  <text x="390" y="23" text-anchor="middle" font-size="12" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace fill="#6e7681">tokensave run (interactive)</text>
+  <text x="390" y="23" text-anchor="middle" font-size="12" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace" fill="#6e7681">tokensave run (interactive)</text>
   <!-- content -->
-  <text x="24" y="52" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave run</tspan></text>
-  <text x="24" y="72" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="92" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave — Pipeline</tspan></text>
-  <text x="24" y="112" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="132" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Papel (persona do AI): </tspan><tspan fill="#79c0ff">Security Auditor</tspan></text>
-  <text x="24" y="152" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Tarefa: </tspan><tspan fill="#79c0ff">Revisar a API de autenticação</tspan></text>
-  <text x="24" y="172" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Contexto: </tspan><tspan fill="#79c0ff">Caminho de arquivo/pasta</tspan></text>
-  <text x="24" y="192" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Caminho do arquivo: </tspan><tspan fill="#79c0ff">./src/api/auth.js</tspan></text>
-  <text x="24" y="212" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Modo de raciocínio: </tspan><tspan fill="#79c0ff">[2] Revisar Código — Bugs, segurança, qualidade</tspan></text>
-  <text x="24" y="232" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Condição de saída: </tspan><tspan fill="#79c0ff">Todas as vulnerabilidades críticas identificadas</tspan></text>
-  <text x="24" y="252" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="272" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
-  <text x="24" y="292" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Tokens originais:    </tspan><tspan fill="#d29922">2.847</tspan></text>
-  <text x="24" y="312" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Após compressão:     </tspan><tspan fill="#3fb950">810</tspan><tspan fill="#6e7681"> (headroom -71%)</tspan></text>
-  <text x="24" y="332" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Custo estimado:      </tspan><tspan fill="#79c0ff">~$0.0041</tspan></text>
-  <text x="24" y="352" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  Modelo:              </tspan><tspan fill="#79c0ff">claude-sonnet-4-6</tspan></text>
-  <text x="24" y="372" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
-  <text x="24" y="392" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="412" font-size="13" font-family='Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Executar pipeline? </tspan><tspan fill="#79c0ff">Yes</tspan></text>
+  <text x="24" y="52" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave run</tspan></text>
+  <text x="24" y="72" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="92" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave — Pipeline</tspan></text>
+  <text x="24" y="112" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="132" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Papel (persona do AI): </tspan><tspan fill="#79c0ff">Security Auditor</tspan></text>
+  <text x="24" y="152" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Tarefa: </tspan><tspan fill="#79c0ff">Revisar a API de autenticação</tspan></text>
+  <text x="24" y="172" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Contexto: </tspan><tspan fill="#79c0ff">Caminho de arquivo/pasta</tspan></text>
+  <text x="24" y="192" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Caminho do arquivo: </tspan><tspan fill="#79c0ff">./src/api/auth.js</tspan></text>
+  <text x="24" y="212" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Modo de raciocínio: </tspan><tspan fill="#79c0ff">[2] Revisar Código — Bugs, segurança, qualidade</tspan></text>
+  <text x="24" y="232" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Condição de saída: </tspan><tspan fill="#79c0ff">Todas as vulnerabilidades críticas identificadas</tspan></text>
+  <text x="24" y="252" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="272" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
+  <text x="24" y="292" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Tokens originais:    </tspan><tspan fill="#d29922">2.847</tspan></text>
+  <text x="24" y="312" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Após compressão:     </tspan><tspan fill="#3fb950">810</tspan><tspan fill="#6e7681"> (headroom -71%)</tspan></text>
+  <text x="24" y="332" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Custo estimado:      </tspan><tspan fill="#79c0ff">~$0.0041</tspan></text>
+  <text x="24" y="352" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Modelo:              </tspan><tspan fill="#79c0ff">claude-sonnet-4-6</tspan></text>
+  <text x="24" y="372" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
+  <text x="24" y="392" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="412" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#3fb950">? </tspan><tspan fill="#e6edf3" font-weight="700">Executar pipeline? </tspan><tspan fill="#79c0ff">Yes</tspan></text>
 </svg>
