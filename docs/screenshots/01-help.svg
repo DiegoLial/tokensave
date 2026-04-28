@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="780" height="460" viewBox="0 0 780 460">
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="480" viewBox="0 0 780 480">
   <defs>
     <linearGradient id="titlebar" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#21262d"/>
@@ -6,7 +6,7 @@
     </linearGradient>
   </defs>
   <!-- window -->
-  <rect width="780" height="460" rx="10" fill="#0d1117"/>
+  <rect width="780" height="480" rx="10" fill="#0d1117"/>
   <!-- titlebar -->
   <rect width="780" height="36" rx="10" fill="url(#titlebar)"/>
   <rect y="26" width="780" height="10" fill="#161b22"/>
@@ -30,10 +30,11 @@
   <text x="24" y="252" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#e6edf3" font-weight="700">Commands:</tspan></text>
   <text x="24" y="272" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">setup      </tspan><tspan fill="#6e7681">Detecta AI tools e injeta configurações nativas</tspan></text>
   <text x="24" y="292" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">run        </tspan><tspan fill="#6e7681">Executa o pipeline builder interativo</tspan></text>
-  <text x="24" y="312" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">skills     </tspan><tspan fill="#6e7681">Menu interativo de bundles de domínio</tspan></text>
-  <text x="24" y="332" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">dash       </tspan><tspan fill="#6e7681">Abre o dashboard de monitoramento</tspan></text>
-  <text x="24" y="352" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">stats      </tspan><tspan fill="#6e7681">Resumo rápido de tokens economizados</tspan></text>
-  <text x="24" y="372" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">templates  </tspan><tspan fill="#6e7681">Lista e gerencia templates de pipeline</tspan></text>
-  <text x="24" y="392" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">config     </tspan><tspan fill="#6e7681">Configura API keys e preferências</tspan></text>
-  <text x="24" y="412" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">mcp        </tspan><tspan fill="#6e7681">Inicia o MCP server de compressão</tspan></text>
+  <text x="24" y="312" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">dash       </tspan><tspan fill="#6e7681">Abre o dashboard web cockpit (localhost:7878)</tspan></text>
+  <text x="24" y="332" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">stats      </tspan><tspan fill="#6e7681">Resumo rápido de tokens economizados</tspan></text>
+  <text x="24" y="352" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">templates  </tspan><tspan fill="#6e7681">Lista e gerencia templates de pipeline</tspan></text>
+  <text x="24" y="372" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">config     </tspan><tspan fill="#6e7681">Configura API keys e preferências</tspan></text>
+  <text x="24" y="392" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">listen     </tspan><tspan fill="#6e7681">Modo daemon — executa jobs do dashboard via WebSocket</tspan></text>
+  <text x="24" y="412" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">skills     </tspan><tspan fill="#6e7681">Menu interativo de bundles de domínio</tspan></text>
+  <text x="24" y="432" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">mcp        </tspan><tspan fill="#6e7681">Inicia o MCP server de compressão</tspan></text>
 </svg>

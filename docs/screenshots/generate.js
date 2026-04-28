@@ -2,7 +2,7 @@
  * Generates terminal screenshot SVGs for the tokensave README.
  * Run: node docs/screenshots/generate.js
  */
-import { writeFileSync, mkdirSync } from 'fs'
+import { writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -17,13 +17,13 @@ const CYAN = '#79c0ff'
 const GREEN= '#3fb950'
 const YELLOW='#d29922'
 const WHITE= '#e6edf3'
+const RED  = '#f85149'
 
-// Token colors: c=cyan, g=green, y=yellow, d=dim, w=white/bold, _=normal
 function line(tokens) {
   if (typeof tokens === 'string') return `<tspan fill="${FG}">${esc(tokens)}</tspan>`
   return tokens.map(([color, text]) => {
     const fill = color === 'c' ? CYAN : color === 'g' ? GREEN : color === 'y' ? YELLOW
-               : color === 'd' ? DIM  : color === 'w' ? WHITE : FG
+               : color === 'd' ? DIM  : color === 'w' ? WHITE : color === 'r' ? RED : FG
     const bold = color === 'w' ? ' font-weight="700"' : ''
     return `<tspan fill="${fill}"${bold}>${esc(text)}</tspan>`
   }).join('')
@@ -74,7 +74,7 @@ function svg(title, lines, { width = 780, prompt = '$ ' } = {}) {
 
 const screens = [
 
-  // 1. help
+  // 1. help — v3 commands
   {
     file: '01-help.svg',
     title: 'tokensave --help',
@@ -92,145 +92,128 @@ const screens = [
       [['w','Commands:']],
       [['d','  '],['c','setup      '],['d','Detecta AI tools e injeta configurações nativas']],
       [['d','  '],['c','run        '],['d','Executa o pipeline builder interativo']],
-      [['d','  '],['c','skills     '],['d','Menu interativo de bundles de domínio']],
-      [['d','  '],['c','dash       '],['d','Abre o dashboard de monitoramento']],
+      [['d','  '],['c','dash       '],['d','Abre o dashboard web cockpit (localhost:7878)']],
       [['d','  '],['c','stats      '],['d','Resumo rápido de tokens economizados']],
       [['d','  '],['c','templates  '],['d','Lista e gerencia templates de pipeline']],
       [['d','  '],['c','config     '],['d','Configura API keys e preferências']],
+      [['d','  '],['c','listen     '],['d','Modo daemon — executa jobs do dashboard via WebSocket']],
+      [['d','  '],['c','skills     '],['d','Menu interativo de bundles de domínio']],
       [['d','  '],['c','mcp        '],['d','Inicia o MCP server de compressão']],
     ],
   },
 
-  // 2. setup
+  // 2. run non-interactive — v3 minimalist output
   {
-    file: '02-setup.svg',
-    title: 'tokensave setup',
-    lines: [
-      [['d','$ '],['c','npx tokensave setup']],
-      '',
-      [['w','⚡ Tokensave Setup']],
-      '',
-      [['d','  Detectando AI tools instalados...']],
-      '',
-      [['d','  Detectados: '],['c','claude-code'],['d',', '],['c','cursor']],
-      '',
-      [['d','  Injetando configurações em '],['w','claude-code'],['d','... '],['g','✓'],['d',' ~/.claude/settings.json']],
-      [['d','  Injetando configurações em '],['w','cursor'],['d','...     '],['g','✓'],['d',' Cursor/User/settings.json']],
-      '',
-      [['g','  ✓ Setup concluído.']],
-      '',
-      [['d','  Regras Caveman injetadas. Respostas serão mais curtas e técnicas.']],
-      [['d','  MCP server registrado em ~/.claude/settings.json']],
-      [['d','  Para executar um pipeline: '],['c','tokensave run']],
-    ],
-  },
-
-  // 3. run interactive
-  {
-    file: '03-run-interactive.svg',
-    title: 'tokensave run (interactive)',
-    lines: [
-      [['d','$ '],['c','npx tokensave run']],
-      '',
-      [['w','⚡ Tokensave — Pipeline']],
-      '',
-      [['g','? '],['w','Papel (persona do AI): '],['c','Security Auditor']],
-      [['g','? '],['w','Tarefa: '],['c','Revisar a API de autenticação']],
-      [['g','? '],['w','Contexto: '],['c','Caminho de arquivo/pasta']],
-      [['g','? '],['w','Caminho do arquivo: '],['c','./src/api/auth.js']],
-      [['g','? '],['w','Modo de raciocínio: '],['c','[2] Revisar Código — Bugs, segurança, qualidade']],
-      [['g','? '],['w','Condição de saída: '],['c','Todas as vulnerabilidades críticas identificadas']],
-      '',
-      [['d','  ─────────────────────────────────────────']],
-      [['d','  Tokens originais:    '],['y','2.847']],
-      [['d','  Após compressão:     '],['g','810'],['d',' (headroom -71%)']],
-      [['d','  Custo estimado:      '],['c','~$0.0041']],
-      [['d','  Modelo:              '],['c','claude-sonnet-4-6']],
-      [['d','  ─────────────────────────────────────────']],
-      '',
-      [['g','? '],['w','Executar pipeline? '],['c','Yes']],
-    ],
-  },
-
-  // 4. streaming response
-  {
-    file: '04-streaming.svg',
-    title: 'tokensave run — streaming response',
-    lines: [
-      [['d','▶ '],['w','CRITICAL ISSUES (must fix before production)']],
-      '',
-      [['g','1. '],['w','JWT secret hardcoded in source'],['d',' — auth.js:14']],
-      [['d','   Bad:  '],['c',"const SECRET = 'my-secret-key-123'"]],
-      [['d','   Fix:  '],['c','process.env.JWT_SECRET (validate on startup)']],
-      '',
-      [['g','2. '],['w','Missing rate limiting on /login'],['d',' — auth.js:89']],
-      [['d','   Brute-force: 1000 attempts/sec possible']],
-      [['d','   Fix: express-rate-limit, 5 req/15min per IP']],
-      '',
-      [['g','3. '],['w','SQL injection via raw string concat'],['d',' — auth.js:142']],
-      [['d','   Bad:  '],['c','db.query("SELECT * FROM users WHERE id=" + id)']],
-      [['d','   Fix:  '],['c','db.query("SELECT * FROM users WHERE id=$1", [id])']],
-      '',
-      [['d','  ─────────────────────────────────────────']],
-      [['d','  Tokens in: '],['g','810'],['d','  out: '],['g','412'],['d','  compressão: '],['g','-71%']],
-      [['d','  Custo real: '],['c','$0.0052'],['d','   Tempo: '],['c','3.2s']],
-      [['d','  ─────────────────────────────────────────']],
-    ],
-  },
-
-  // 5. non-interactive
-  {
-    file: '05-non-interactive.svg',
-    title: 'tokensave run --yes (non-interactive / CI)',
+    file: '02-run.svg',
+    title: 'tokensave run --yes (non-interactive)',
     lines: [
       [['d','$ '],['c','npx tokensave run \\']],
-      [['d','    '],['d','--papel "Security Auditor" \\']],
-      [['d','    '],['d','--tarefa "Revisar endpoint de login" \\']],
-      [['d','    '],['d','--context-file ./src/api/auth.js \\']],
-      [['d','    '],['d','--modo revisar-codigo --yes']],
+      [['d','    --papel "Security Auditor" \\']],
+      [['d','    --tarefa "Revisar endpoint de login" \\']],
+      [['d','    --context-file ./src/api/auth.js \\']],
+      [['d','    --mode revisar-codigo --yes']],
       '',
-      [['w','⚡ Tokensave — Pipeline']],
+      [['c','⚡ '],['w','revisar-codigo'],['d','  ·  claude-sonnet-4-6  ·  ~$0.0018']],
+      [['d','Security Auditor → Revisar endpoint de login']],
+      [['d','   361/1204 tokens (native, -70%)']],
       '',
-      [['d','  Papel:    '],['c','Security Auditor']],
-      [['d','  Tarefa:   '],['c','Revisar endpoint de login']],
-      [['d','  Modo:     '],['c','revisar-codigo']],
+      [['d','▶ '],['w','CRITICAL ISSUES']],
       '',
-      [['d','  ─────────────────────────────────────────']],
-      [['d','  Tokens originais:    '],['y','1.204']],
-      [['d','  Após compressão:     '],['g','361'],['d',' (native -70%)']],
-      [['d','  Custo estimado:      '],['c','~$0.0018']],
-      [['d','  Modelo:              '],['c','claude-sonnet-4-6']],
-      [['d','  ─────────────────────────────────────────']],
+      [['g','1. '],['w','SQL injection'],['d',' — auth.js:23']],
+      [['d','   '],['c','db.query("SELECT * FROM users WHERE id=" + id)']],
       '',
-      [['d','▶ '],['w','…resposta em streaming…']],
+      [['g','2. '],['w','JWT hardcoded secret'],['d',' — auth.js:7']],
+      [['d','   '],['c',"const SECRET = 'my-secret-key'"]],
+      '',
+      [['g','3. '],['w','No rate limiting on /login']],
+      '',
+      [['g','✓ '],['d','361/1204 tokens  ·  $0.0017  ·  2.8s']],
     ],
   },
 
-  // 6. skills chain
+  // 3. dry-run
   {
-    file: '06-skills-chain.svg',
-    title: 'tokensave skills — Security Audit (chain)',
+    file: '03-dry-run.svg',
+    title: 'tokensave run --dry-run',
     lines: [
-      [['d','$ '],['c','npx tokensave skills']],
+      [['d','$ '],['c','npx tokensave run \\']],
+      [['d','    --papel "Engineer" --tarefa "Revisar auth" \\']],
+      [['d','    --context-file ./src/auth.js --mode revisar-codigo --dry-run']],
       '',
-      [['w','⚡ Tokensave Skills — Bundles por Domínio']],
+      [['c','⚡ '],['w','dry-run']],
       '',
-      [['g','? '],['w','Escolha um bundle: '],['c','Security Audit']],
+      [['d','  Tokens originais:  '],['y','1204']],
+      [['d','  Após compressão:   '],['g','361'],['d',' (native, -70%)']],
+      [['d','  Custo estimado:    '],['c','$0.0012']],
       '',
-      [['d','  Papel: Security Auditor']],
-      [['d','  Modos: revisar-codigo → pitfalls → multi-perspectiva']],
-      [['d','  Encadeamento: 3 etapas']],
+      [['d','  Contexto comprimido:']],
       '',
-      [['g','? '],['w','O que fazer? '],['c','Executar encadeado (3 modos em sequência)']],
+      [['d','  export async function login(req, res) {']],
+      [['d','    const user = await db.query(']],
+      [['d','      "SELECT * FROM users WHERE id=" + req.body.id)']],
+      [['d','  ...']],
+    ],
+  },
+
+  // 4. stats — v3 minimalist
+  {
+    file: '04-stats.svg',
+    title: 'tokensave stats',
+    lines: [
+      [['d','$ '],['c','npx tokensave stats']],
       '',
-      [['c','  1/3 — Revisão de código (bugs e segurança)']],
-      [['d','  ▶ Executando revisar-codigo...']],
-      [['g','  ✓ Etapa 1 concluída. Output salvo para próxima etapa.']],
+      [['c','⚡ '],['d','tokensave stats']],
       '',
-      [['g','? '],['w','Continuar para próxima etapa? '],['c','Yes']],
+      [['d','  '],['w','87'],['d',' runs  ·  '],['w','$1.3240'],['d',' total  ·  '],['g','69% salvo']],
       '',
-      [['c','  2/3 — Pitfalls (o que pode ser explorado)']],
-      [['d','  ▶ Executando pitfalls com contexto da etapa anterior...']],
+      [['d','  Top modos:  '],['_','revisar-codigo (34)  pitfalls (18)  swot (12)']],
+      [['d','  Hoje:        '],['_','3 runs  ·  $0.0821']],
+      '',
+      [['d','  Por projeto:']],
+      [['d','    tokensave                41 runs  -71%  $0.62']],
+      [['d','    meu-saas                 28 runs  -68%  $0.47']],
+      [['d','    api-service              18 runs  -65%  $0.23']],
+    ],
+  },
+
+  // 5. stdin pipe
+  {
+    file: '05-stdin.svg',
+    title: 'stdin pipe — cat file | tokensave run',
+    lines: [
+      [['d','$ '],['c','cat src/api/auth.js | npx tokensave run \\']],
+      [['d','    --papel "Security Auditor" \\']],
+      [['d','    --tarefa "Revisar vulnerabilidades" \\']],
+      [['d','    --mode revisar-codigo --yes']],
+      '',
+      [['c','⚡ '],['w','revisar-codigo'],['d','  ·  claude-sonnet-4-6  ·  ~$0.0021']],
+      [['d','Security Auditor → Revisar vulnerabilidades']],
+      [['d','   482/1847 tokens (headroom, -74%)']],
+      '',
+      [['d','▶ ...']],
+      '',
+      [['g','✓ '],['d','482/1847 tokens  ·  $0.0019  ·  3.1s']],
+    ],
+  },
+
+  // 6. multiple context files
+  {
+    file: '06-context-files.svg',
+    title: 'tokensave run --context-file (múltiplos)',
+    lines: [
+      [['d','$ '],['c','npx tokensave run \\']],
+      [['d','    --papel "Architect" \\']],
+      [['d','    --tarefa "Documentar todos os módulos core" \\']],
+      [['d','    --context-file src/core/runner.js \\']],
+      [['d','    --context-file src/core/provider.js \\']],
+      [['d','    --context-file src/core/metrics.js \\']],
+      [['d','    --mode documentacao --yes']],
+      '',
+      [['c','⚡ '],['w','documentacao'],['d','  ·  claude-sonnet-4-6  ·  ~$0.0034']],
+      [['d','Architect → Documentar todos os módulos core']],
+      [['d','   891/2843 tokens (headroom, -69%)']],
+      '',
+      [['g','✓ '],['d','891/2843 tokens  ·  $0.0031  ·  4.2s']],
     ],
   },
 
@@ -239,73 +222,71 @@ const screens = [
     file: '07-templates.svg',
     title: 'tokensave templates',
     lines: [
-      [['d','$ '],['c','npx tokensave run --save-as security-weekly']],
-      [['g','  ✓ Template "security-weekly" salvo.']],
+      [['d','$ '],['c','npx tokensave run --save-as security-audit --papel "Security Auditor" \\']],
+      [['d','    --mode revisar-codigo --condicao "Todos os CVEs identificados" --yes']],
+      [['g','  ✓ Template "security-audit" salvo.']],
       '',
       [['d','$ '],['c','npx tokensave templates']],
       '',
-      [['w','⚡ Templates salvos']],
+      [['c','⚡ '],['w','Templates salvos']],
       '',
-      [['w','  security-weekly']],
-      [['d','    Papel:   Security Auditor']],
-      [['d','    Modo:    revisar-codigo']],
-      [['d','    Condição: Todas as vulnerabilidades críticas identificadas']],
-      [['d','    Salvo:   2026-04-27']],
+      [['w','  security-audit']],
+      [['d','    Papel:    Security Auditor']],
+      [['d','    Modo:     revisar-codigo']],
+      [['d','    Condição: Todos os CVEs identificados']],
+      [['d','    Salvo:    2026-04-28']],
       '',
-      [['d','  Usar template: '],['c','tokensave run --template security-weekly']],
-      [['d','  Remover:       '],['c','tokensave templates --delete security-weekly']],
+      [['d','  Usar:    '],['c','tokensave run --template security-audit']],
+      [['d','  Remover: '],['c','tokensave templates --delete security-audit']],
     ],
   },
 
-  // 8. stats
+  // 8. listen daemon
   {
-    file: '08-stats.svg',
-    title: 'tokensave stats',
+    file: '08-listen.svg',
+    title: 'tokensave listen (daemon mode)',
     lines: [
-      [['d','$ '],['c','npx tokensave stats']],
+      [['d','$ '],['c','npx tokensave listen']],
       '',
-      [['w','⚡ Tokensave Stats']],
+      [['c','⚡ tokensave listen'],['d',' → ws://localhost:7878/ws']],
       '',
-      [['d','  Total de pipelines:   '],['w','87']],
-      [['d','  Tokens economizados:  '],['g','341.200'],['d',' ('],['g','-69%'],['d',')']],
-      [['d','  Custo total:          '],['c','$1.3240']],
-      [['d','  Hoje (pipelines):     '],['w','12']],
-      [['d','  Hoje (custo):         '],['c','$0.1820']],
+      [['d','  Aguardando jobs do dashboard. Ctrl+C para parar.']],
       '',
-      [['d','  Modos mais usados:']],
-      [['d','    revisar-codigo          34 runs']],
-      [['d','    pitfalls                18 runs']],
-      [['d','    swot                    12 runs']],
+      [['d','  Job job_1745823001_x8k2p: revisar-codigo — Revisar auth.js']],
+      [['d','▶ CRITICAL ISSUES...']],
+      [['g','  ✓ Job concluído.']],
       '',
-      [['d','  Por projeto:']],
-      [['d','    tokensave               41 runs  -71%  $0.62']],
-      [['d','    meu-saas                28 runs  -68%  $0.47']],
-      [['d','    api-service             18 runs  -65%  $0.23']],
+      [['d','  Job job_1745823045_m3n7q: swot — Analisar arquitetura de microserviços']],
+      [['d','▶ FORÇAS...']],
+      [['g','  ✓ Job concluído.']],
+      '',
+      [['d','  ^C']],
+      [['d','  Listen encerrado.']],
     ],
   },
 
-  // 9. ollama
+  // 9. config
   {
-    file: '09-ollama.svg',
-    title: 'tokensave run --model ollama/llama3 (local, free)',
+    file: '09-config.svg',
+    title: 'tokensave config',
     lines: [
-      [['d','$ '],['c','npx tokensave run \\']],
-      [['d','    '],['d','--papel "Tech Lead" \\']],
-      [['d','    '],['d','--tarefa "Revisar este código" \\']],
-      [['d','    '],['d','--model ollama/llama3 --yes']],
+      [['d','$ '],['c','npx tokensave config']],
       '',
-      [['w','⚡ Tokensave — Pipeline']],
+      [['c','⚡ '],['w','tokensave config']],
       '',
-      [['d','  Papel:    '],['c','Tech Lead']],
-      [['d','  Tarefa:   '],['c','Revisar este código']],
-      [['d','  Modo:     '],['c','revisar-codigo']],
+      [['d','  Config atual:']],
+      [['d','  Modelo padrão:   '],['c','claude-sonnet-4-6']],
+      [['d','  Caveman padrão:  '],['c','full']],
+      [['d','  Anthropic key:   '],['g','✓ configurada']],
+      [['d','  OpenAI key:      '],['r','✗ não configurada']],
+      [['d','  Google key:      '],['r','✗ não configurada']],
       '',
-      [['d','  ─────────────────────────────────────────']],
-      [['d','  Custo estimado:      '],['g','local (sem custo)']],
-      [['d','  Modelo:              '],['c','llama3'],['d',' via Ollama localhost:11434']],
-      [['d','  ─────────────────────────────────────────']],
+      [['g','? '],['w','Anthropic API Key (Enter para manter): '],['d','****']],
+      [['g','? '],['w','OpenAI API Key (Enter para manter): ']],
+      [['g','? '],['w','Modelo padrão: '],['c','claude-sonnet-4-6']],
+      [['g','? '],['w','Caveman level padrão: '],['c','full']],
       '',
-      [['d','▶ '],['w','…resposta em streaming (sem API key)…']],
+      [['g','  ✓ Config salva.']],
     ],
   },
 
