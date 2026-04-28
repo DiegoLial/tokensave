@@ -15,26 +15,26 @@
   <circle cx="40" cy="18" r="6" fill="#febc2e"/>
   <circle cx="60" cy="18" r="6" fill="#28c840"/>
   <!-- title -->
-  <text x="390" y="23" text-anchor="middle" font-size="12" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace" fill="#6e7681">tokensave run --yes (non-interactive / CI)</text>
+  <text x="390" y="23" text-anchor="middle" font-size="12" font-family="Consolas,Menlo,monospace" fill="#6e7681">tokensave run --yes (non-interactive / CI)</text>
   <!-- content -->
-  <text x="24" y="52" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave run \</tspan></text>
-  <text x="24" y="72" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--papel "Security Auditor" \</tspan></text>
-  <text x="24" y="92" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--tarefa "Revisar endpoint de login" \</tspan></text>
-  <text x="24" y="112" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--context-file ./src/api/auth.js \</tspan></text>
-  <text x="24" y="132" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--modo revisar-codigo --yes</tspan></text>
-  <text x="24" y="152" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="172" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave — Pipeline</tspan></text>
-  <text x="24" y="192" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="212" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Papel:    </tspan><tspan fill="#79c0ff">Security Auditor</tspan></text>
-  <text x="24" y="232" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Tarefa:   </tspan><tspan fill="#79c0ff">Revisar endpoint de login</tspan></text>
-  <text x="24" y="252" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Modo:     </tspan><tspan fill="#79c0ff">revisar-codigo</tspan></text>
-  <text x="24" y="272" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="292" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
-  <text x="24" y="312" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Tokens originais:    </tspan><tspan fill="#d29922">1.204</tspan></text>
-  <text x="24" y="332" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Após compressão:     </tspan><tspan fill="#3fb950">361</tspan><tspan fill="#6e7681"> (native -70%)</tspan></text>
-  <text x="24" y="352" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Custo estimado:      </tspan><tspan fill="#79c0ff">~$0.0018</tspan></text>
-  <text x="24" y="372" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Modelo:              </tspan><tspan fill="#79c0ff">claude-sonnet-4-6</tspan></text>
-  <text x="24" y="392" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
-  <text x="24" y="412" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="432" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">▶ </tspan><tspan fill="#e6edf3" font-weight="700">…resposta em streaming…</tspan></text>
+  <text x="24" y="52" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave run \</tspan></text>
+  <text x="24" y="72" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--papel "Security Auditor" \</tspan></text>
+  <text x="24" y="92" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--tarefa "Revisar endpoint de login" \</tspan></text>
+  <text x="24" y="112" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--context-file ./src/api/auth.js \</tspan></text>
+  <text x="24" y="132" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">    </tspan><tspan fill="#6e7681">--modo revisar-codigo --yes</tspan></text>
+  <text x="24" y="152" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="172" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#e6edf3" font-weight="700">⚡ Tokensave — Pipeline</tspan></text>
+  <text x="24" y="192" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="212" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  Papel:    </tspan><tspan fill="#79c0ff">Security Auditor</tspan></text>
+  <text x="24" y="232" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  Tarefa:   </tspan><tspan fill="#79c0ff">Revisar endpoint de login</tspan></text>
+  <text x="24" y="252" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  Modo:     </tspan><tspan fill="#79c0ff">revisar-codigo</tspan></text>
+  <text x="24" y="272" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="292" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
+  <text x="24" y="312" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  Tokens originais:    </tspan><tspan fill="#d29922">1.204</tspan></text>
+  <text x="24" y="332" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  Após compressão:     </tspan><tspan fill="#3fb950">361</tspan><tspan fill="#6e7681"> (native -70%)</tspan></text>
+  <text x="24" y="352" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  Custo estimado:      </tspan><tspan fill="#79c0ff">~$0.0018</tspan></text>
+  <text x="24" y="372" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  Modelo:              </tspan><tspan fill="#79c0ff">claude-sonnet-4-6</tspan></text>
+  <text x="24" y="392" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  ─────────────────────────────────────────</tspan></text>
+  <text x="24" y="412" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="432" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">▶ </tspan><tspan fill="#e6edf3" font-weight="700">…resposta em streaming…</tspan></text>
 </svg>

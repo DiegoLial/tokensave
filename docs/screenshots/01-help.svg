@@ -15,25 +15,25 @@
   <circle cx="40" cy="18" r="6" fill="#febc2e"/>
   <circle cx="60" cy="18" r="6" fill="#28c840"/>
   <!-- title -->
-  <text x="390" y="23" text-anchor="middle" font-size="12" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace" fill="#6e7681">tokensave --help</text>
+  <text x="390" y="23" text-anchor="middle" font-size="12" font-family="Consolas,Menlo,monospace" fill="#6e7681">tokensave --help</text>
   <!-- content -->
-  <text x="24" y="52" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave</tspan></text>
-  <text x="24" y="72" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="92" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#79c0ff">Usage: </tspan><tspan fill="#e6edf3" font-weight="700">tokensave</tspan><tspan fill="#6e7681"> [options] [command]</tspan></text>
-  <text x="24" y="112" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="132" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  Structured AI pipeline for any tool. One command. 70% less tokens.</tspan></text>
-  <text x="24" y="152" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="172" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#e6edf3" font-weight="700">Options:</tspan></text>
-  <text x="24" y="192" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  -V, --version   output the version number</tspan></text>
-  <text x="24" y="212" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  -h, --help      display help for command</tspan></text>
-  <text x="24" y="232" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#c9d1d9"></tspan></text>
-  <text x="24" y="252" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#e6edf3" font-weight="700">Commands:</tspan></text>
-  <text x="24" y="272" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">setup      </tspan><tspan fill="#6e7681">Detecta AI tools e injeta configurações nativas</tspan></text>
-  <text x="24" y="292" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">run        </tspan><tspan fill="#6e7681">Executa o pipeline builder interativo</tspan></text>
-  <text x="24" y="312" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">skills     </tspan><tspan fill="#6e7681">Menu interativo de bundles de domínio</tspan></text>
-  <text x="24" y="332" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">dash       </tspan><tspan fill="#6e7681">Abre o dashboard de monitoramento</tspan></text>
-  <text x="24" y="352" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">stats      </tspan><tspan fill="#6e7681">Resumo rápido de tokens economizados</tspan></text>
-  <text x="24" y="372" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">templates  </tspan><tspan fill="#6e7681">Lista e gerencia templates de pipeline</tspan></text>
-  <text x="24" y="392" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">config     </tspan><tspan fill="#6e7681">Configura API keys e preferências</tspan></text>
-  <text x="24" y="412" font-size="13" font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">mcp        </tspan><tspan fill="#6e7681">Inicia o MCP server de compressão</tspan></text>
+  <text x="24" y="52" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">$ </tspan><tspan fill="#79c0ff">npx tokensave</tspan></text>
+  <text x="24" y="72" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="92" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#79c0ff">Usage: </tspan><tspan fill="#e6edf3" font-weight="700">tokensave</tspan><tspan fill="#6e7681"> [options] [command]</tspan></text>
+  <text x="24" y="112" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="132" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  Structured AI pipeline for any tool. One command. 70% less tokens.</tspan></text>
+  <text x="24" y="152" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="172" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#e6edf3" font-weight="700">Options:</tspan></text>
+  <text x="24" y="192" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  -V, --version   output the version number</tspan></text>
+  <text x="24" y="212" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  -h, --help      display help for command</tspan></text>
+  <text x="24" y="232" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#c9d1d9"></tspan></text>
+  <text x="24" y="252" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#e6edf3" font-weight="700">Commands:</tspan></text>
+  <text x="24" y="272" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">setup      </tspan><tspan fill="#6e7681">Detecta AI tools e injeta configurações nativas</tspan></text>
+  <text x="24" y="292" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">run        </tspan><tspan fill="#6e7681">Executa o pipeline builder interativo</tspan></text>
+  <text x="24" y="312" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">skills     </tspan><tspan fill="#6e7681">Menu interativo de bundles de domínio</tspan></text>
+  <text x="24" y="332" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">dash       </tspan><tspan fill="#6e7681">Abre o dashboard de monitoramento</tspan></text>
+  <text x="24" y="352" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">stats      </tspan><tspan fill="#6e7681">Resumo rápido de tokens economizados</tspan></text>
+  <text x="24" y="372" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">templates  </tspan><tspan fill="#6e7681">Lista e gerencia templates de pipeline</tspan></text>
+  <text x="24" y="392" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">config     </tspan><tspan fill="#6e7681">Configura API keys e preferências</tspan></text>
+  <text x="24" y="412" font-size="13" font-family="Consolas,Menlo,monospace"><tspan fill="#6e7681">  </tspan><tspan fill="#79c0ff">mcp        </tspan><tspan fill="#6e7681">Inicia o MCP server de compressão</tspan></text>
 </svg>

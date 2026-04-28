@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUT = __dirname
 
-const FONT = `'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace`
+const FONT = `Consolas,Menlo,monospace`
 const BG   = '#0d1117'
 const FG   = '#c9d1d9'
 const DIM  = '#6e7681'
