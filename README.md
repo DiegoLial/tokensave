@@ -85,6 +85,46 @@ npx tokensave run \
 npx tokensave dash --web
 ```
 
+## 📸 Galeria Completa
+
+### CLI — Terminal
+
+| Comando | Output |
+|---|---|
+| **Help** | ![help](docs/screenshots/01-help.png) |
+| **Version** | ![version](docs/screenshots/02-version.png) |
+| **Setup** | ![setup](docs/screenshots/02-setup.png) |
+| **Interactive** | ![interactive](docs/screenshots/03-run-interactive.png) |
+| **Stats** | ![stats](docs/screenshots/03-stats.png) |
+| **Streaming** | ![streaming](docs/screenshots/04-streaming.png) |
+| **Templates** | ![templates](docs/screenshots/04-templates.png) |
+| **Run Help** | ![run-help](docs/screenshots/05-run-help.png) |
+| **Skills** | ![skills](docs/screenshots/06-skills-chain.png) |
+| **Ollama** | ![ollama](docs/screenshots/09-ollama.png) |
+
+### Dashboard Web — 4 Abas
+
+| Aba | Imagem |
+|---|---|
+| **Run** | ![run](docs/screenshots/dash-01-run.png) |
+| **History** | ![history](docs/screenshots/dash-02-history.png) |
+| **Templates** | ![templates](docs/screenshots/dash-03-templates.png) |
+| **Settings** | ![settings](docs/screenshots/dash-04-settings.png) |
+
+### Formatos SVG — Terminal Minimalista (v0.3.0)
+
+**Non-Interactive Output Format:**
+
+- ![01 help](docs/screenshots/01-help.svg)
+- ![02 run](docs/screenshots/02-run.svg)  
+- ![03 dry-run](docs/screenshots/03-dry-run.svg)
+- ![04 stats](docs/screenshots/04-stats.svg)
+- ![05 stdin pipe](docs/screenshots/05-stdin.svg)
+- ![06 context files](docs/screenshots/06-context-files.svg)
+- ![07 templates](docs/screenshots/07-templates.svg)
+- ![08 listen daemon](docs/screenshots/08-listen.svg)
+- ![09 config](docs/screenshots/09-config.svg)
+
 ## 📦 Instalação
 
 **Sem instalar (npx):**
@@ -413,6 +453,46 @@ npx tokensave run \
 # Open web dashboard
 npx tokensave dash --web
 ```
+
+## 📸 Complete Gallery
+
+### CLI — Terminal
+
+| Command | Output |
+|---|---|
+| **Help** | ![help](docs/screenshots/01-help.png) |
+| **Version** | ![version](docs/screenshots/02-version.png) |
+| **Setup** | ![setup](docs/screenshots/02-setup.png) |
+| **Interactive** | ![interactive](docs/screenshots/03-run-interactive.png) |
+| **Stats** | ![stats](docs/screenshots/03-stats.png) |
+| **Streaming** | ![streaming](docs/screenshots/04-streaming.png) |
+| **Templates** | ![templates](docs/screenshots/04-templates.png) |
+| **Run Help** | ![run-help](docs/screenshots/05-run-help.png) |
+| **Skills** | ![skills](docs/screenshots/06-skills-chain.png) |
+| **Ollama** | ![ollama](docs/screenshots/09-ollama.png) |
+
+### Web Dashboard — 4 Tabs
+
+| Tab | Image |
+|---|---|
+| **Run** | ![run](docs/screenshots/dash-01-run.png) |
+| **History** | ![history](docs/screenshots/dash-02-history.png) |
+| **Templates** | ![templates](docs/screenshots/dash-03-templates.png) |
+| **Settings** | ![settings](docs/screenshots/dash-04-settings.png) |
+
+### SVG Formats — Minimalist Terminal (v0.3.0)
+
+**Non-Interactive Output Format:**
+
+- ![01 help](docs/screenshots/01-help.svg)
+- ![02 run](docs/screenshots/02-run.svg)
+- ![03 dry-run](docs/screenshots/03-dry-run.svg)
+- ![04 stats](docs/screenshots/04-stats.svg)
+- ![05 stdin pipe](docs/screenshots/05-stdin.svg)
+- ![06 context files](docs/screenshots/06-context-files.svg)
+- ![07 templates](docs/screenshots/07-templates.svg)
+- ![08 listen daemon](docs/screenshots/08-listen.svg)
+- ![09 config](docs/screenshots/09-config.svg)
 
 ## 📦 Installation
 
